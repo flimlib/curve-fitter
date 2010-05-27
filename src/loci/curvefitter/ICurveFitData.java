@@ -1,3 +1,5 @@
+package loci.curvefitter;
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -19,7 +21,7 @@ public interface ICurveFitData {
      *
      * @return array of parameters
      */
-    double[] getParams();
+    public double[] getParams();
 
     /**
      * Sets parameters of the fit.  Could represent multiple components.
@@ -27,7 +29,7 @@ public interface ICurveFitData {
      *
      * @param params array of parameters
      */
-    void setParams(double[] params);
+    public void setParams(double[] params);
 
     /**
      * Get input data for the fit.  Input only.
@@ -56,4 +58,19 @@ public interface ICurveFitData {
      * @param yFit array of fitted data
      */
     public void setYFitted(double yFit[]);
+
+    /**
+     * Keeps track of user data on behalf of caller.
+     *
+     * @return user data
+     */
+    public Object getUserData();
+
+    /**
+     * Keeps track of user data on behalf of caller.
+     *
+     * @param data user data
+     */
+    public void setUserData(Object data);
+
 }

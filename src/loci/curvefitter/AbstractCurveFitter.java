@@ -1,3 +1,5 @@
+package loci.curvefitter;
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -11,7 +13,6 @@
 public abstract class AbstractCurveFitter implements ICurveFitter {
     int m_curveType = ICurveFitter.EXPONENTIAL;
     double m_xInc = ICurveFitter.DEFAULT_X_INC;
-    private Object m_data = null;
     
     /**
      * @inheritDoc
@@ -39,20 +40,6 @@ public abstract class AbstractCurveFitter implements ICurveFitter {
      */
     public void setXInc(double xInc) {
         m_xInc = xInc;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public Object getUserData() {
-        return m_data;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public void setUserData(Object data) {
-        m_data = data;
     }
 
     /**

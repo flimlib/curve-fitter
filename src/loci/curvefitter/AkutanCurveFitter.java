@@ -1,3 +1,5 @@
+package loci.curvefitter;
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -66,10 +68,14 @@ public class AkutanCurveFitter extends AbstractCurveFitter {
     //TODO the LMObjective class could be passed in to the constructor, for different
     // flavors of curve fit criteria
     static class MyObjective implements LMObjective {
+        int m_countDown = 50;
+        boolean m_firstTime = true;
+        boolean m_skipJacobean = false;
         DoubleMatrix1D m_x;
         DoubleMatrix1D m_y;
         DoubleMatrix1D m_yFitted;
         DoubleMatrix2D m_jacobean;
+        int seq = 0;
 
         /**
          * Constructor
@@ -82,7 +88,7 @@ public class AkutanCurveFitter extends AbstractCurveFitter {
             m_x = x;
             m_y = y;
             m_yFitted = yFitted;
-            m_jacobean = new DenseDoubleMatrix2D(5,5);
+            m_jacobean = new DenseDoubleMatrix2D(y.size(), 100); // specified rows, cols
         }
 
         /**
@@ -92,46 +98,80 @@ public class AkutanCurveFitter extends AbstractCurveFitter {
          * @param a parameters of the fit
          */
         public double value(DoubleMatrix1D a) {
-            double a0 = a.get(0);
-            double a1 = a.get(1);
-            return 0.0;
+
+            if (0 > --m_countDown) {
+              //  System.exit(0);
+            }
+
+            double A      = a.get(0);
+            double lambda = a.get(1);
+            double b      = a.get(2);
+
+            if (0.0 == A && !m_firstTime) {
+                m_skipJacobean = true;
+            }
+            else {
+                m_skipJacobean = false;
+            }
+
+            double chiSq = 0.0;
+
+            for (int i = 0; i < m_y.size(); ++i) {
+                double tmpX = m_x.get(i);
+                double e = Math.exp(-lambda * tmpX);
+                double yFitted = A * e + b;
+                m_yFitted.set(i, yFitted);
+                chiSq += (m_y.get(i) - yFitted)*(m_y.get(i) - yFitted);
+
+                if (!m_skipJacobean) {
+                    m_jacobean.set(i, 0, e);
+                    m_jacobean.set(i, 1, -A * tmpX * e);
+                    m_jacobean.set(i, 2, 1.0);
+                }
+            }
+            System.out.println("A " + A + " lambda " + lambda + " b " + b + " chiSq is " + chiSq + " " + ++seq);
+
+            m_firstTime = false;
+            
+            return chiSq;
         }
 
         /**
-         * Computes the gradient of the function at point x for each member of x.
-         *
-         * Our function is y = (x1 - A1) ^ 2 + (x2 - A2) ^ 3, so the analytic
-         * gradient is dy/dx1 = 2 * (x1 - A1) and dy/dx2 = 4 * (x2 - A2) ^ 3
+         * Computes the gradient of the function for parameters a.<p>
+         * Must be called after 'value()'.
          *
          * @param x
-         * @return
+         * @return gradient
          */
-        public DoubleMatrix1D gradient(DoubleMatrix1D x) {
-            DoubleMatrix1D g = new DenseDoubleMatrix1D(x.size());
+        public DoubleMatrix1D gradient(DoubleMatrix1D a) {
+            DoubleMatrix1D g = new DenseDoubleMatrix1D(a.size());
             double betaSum;
-            for (int j = 0; j < x.size(); ++j) {
+            for (int j = 0; j < a.size(); ++j) {
                 betaSum = 0.0;
-                for (int k = 0; k <= m_y.size(); ++k) {
+                for (int k = 0; k < m_y.size(); ++k) {
+                    //System.out.println("k " + k + " j " + j);
+                    //System.out.println("jacobean " + m_jacobean.toString());
                     betaSum += (m_y.get(k) - m_yFitted.get(k)) * m_jacobean.get(k, j); //TODO s/b weighted by 1.0/(sigma[k]*sigma[k])
                 }
                 g.set(j, betaSum);
             }
+            System.out.println("gradient " + seq);
             return g;
         }
 
         /**
-         * Computes an exact or approximated Hessian of the function at x.
+         * Computes an exact or approximated Hessian of the function at a.<p>
+         * Must be called after 'value()'.
          *
-         * @param x
-         * @return
+         * @param a
+         * @return hessian
          */
-        public DoubleMatrix2D hessian(DoubleMatrix1D x) {
-            DoubleMatrix2D H = new DenseDoubleMatrix2D(x.size(), x.size());
-            double dotProduct;
-            for (int j = 0; j < x.size(); ++j) {
+        public DoubleMatrix2D hessian(DoubleMatrix1D a) {
+            DoubleMatrix2D H = new DenseDoubleMatrix2D(a.size(), a.size());
+            for (int j = 0; j < a.size(); ++j) {
                 for (int i = 0; i <= j; ++i) {
-                    dotProduct = 0.0;
-                    for (int k = 0; k <= m_y.size(); ++k) {
+                    double dotProduct = 0.0;
+                    for (int k = 0; k < m_y.size(); ++k) {
                         dotProduct += m_jacobean.get(k, i) * m_jacobean.get(k, j); //TODO s/b weighted by 1.0/(sigma[k]*sigma[k])
                     }
                     H.set(i, j, dotProduct);
@@ -140,6 +180,7 @@ public class AkutanCurveFitter extends AbstractCurveFitter {
                     }
                 }
             }
+            System.out.println("hessian " + seq);
             return H;
         }
     }

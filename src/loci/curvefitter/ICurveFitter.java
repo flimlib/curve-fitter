@@ -1,3 +1,5 @@
+package loci.curvefitter;
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -53,20 +55,6 @@ public interface ICurveFitter {
      * @param xInc x increment
      */
     public void setXInc(double xInc);
-
-    /**
-     * Keeps track of user data on behalf of caller.
-     * 
-     * @return user data
-     */
-    public Object getUserData();
-
-    /**
-     * Keeps track of user data on behalf of caller.
-     *
-     * @param data user data
-     */
-    public void setUserData(Object data);
 
     /**
      * Do the fit.
