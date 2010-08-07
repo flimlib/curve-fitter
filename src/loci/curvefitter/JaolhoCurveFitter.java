@@ -46,7 +46,7 @@ public class JaolhoCurveFitter extends AbstractCurveFitter {
 
             lma = new LMA(function, data.getParams(), lmaData);
 
-     System.out.println("INCOMING param0 " + lma.parameters[0] + ", param1 " + lma.parameters[1] + ", param2 " + lma.parameters[2]);
+    // System.out.println("INCOMING param0 " + lma.parameters[0] + ", param1 " + lma.parameters[1] + ", param2 " + lma.parameters[2]);
 
 
             try {
@@ -61,7 +61,11 @@ public class JaolhoCurveFitter extends AbstractCurveFitter {
                 IJ.log("exception " + e);
             }
 
-            if (success) {
+            if (lma.parameters[1] > 0.0f && lma.parameters[1] < 100.0f && lma.parameters[1] != 1.0f) {
+                System.out.println("chi2: " + lma.chi2 + ", param0: " + lma.parameters[0] + ", param1: " + lma.parameters[1] + ", param2: " + lma.parameters[2]);
+            }
+
+            if (false && success) {
                 System.out.println("iterations: " + lma.iterationCount);
                 System.out.println("chi2: " + lma.chi2 + ", param0: " + lma.parameters[0] + ", param1: " + lma.parameters[1] + ", param2: " + lma.parameters[2]);
                 IJ.log("iterations: " + lma.iterationCount);
