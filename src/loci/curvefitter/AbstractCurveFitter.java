@@ -55,3 +55,4 @@ public abstract class AbstractCurveFitter implements ICurveFitter {
      */
     abstract public int fitData(ICurveFitData[] data, int start, int stop);
 }
+
