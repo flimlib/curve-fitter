@@ -76,7 +76,7 @@ public class GrayCurveFitter extends AbstractCurveFitter {
             int fitEnd = stop;
             float instr[] = new float[0];
             int nInstr = 0; // no lamp function
-            int noise = 2; // Poisson noise
+            int noise = 0; //2; // Poisson noise
             float sig[] = new float[stop+1];
             for (int i = 0; i < sig.length; ++i) {
                 sig[i] = 1.0f; // ignore sig
@@ -118,13 +118,14 @@ public class GrayCurveFitter extends AbstractCurveFitter {
 
 
 
-System.out.println("xinc " + xincr + " start " + fitStart + " end " + fitEnd + " chiSqTarget " + chiSqTarget);
+//System.out.println("GrayCurveFitter");
+//System.out.println("!! xinc " + xincr + " start " + fitStart + " end " + fitEnd + " chiSqTarget " + chiSqTarget);
                 int returnValue = lib.nr_GCI_triple_integral_fitting_engine(xincr, y, fitStart, fitEnd,
 									   instr, nInstr, noise, sig,
                                                                            z, a, tau,
                                                                            fitted, residuals,
                                                                            chiSq, chiSqTarget);
-System.out.println("returnValue " + returnValue + " z " + z.getValue() + " a " + a.getValue() + " tau " + tau.getValue() + " chiSq " + chiSq.getValue());
+//System.out.println("returnValue " + returnValue + " z " + z.getValue() + " a " + a.getValue() + " tau " + tau.getValue() + " chiSq " + chiSq.getValue());
                 //data.setYFitted();
                 params[0] = (double) a.getValue();
                 params[1] = 1.0 / ((double) tau.getValue()); // convert tau to lambda
@@ -138,7 +139,7 @@ System.out.println("returnValue " + returnValue + " z " + z.getValue() + " a " +
             int fitEnd = stop;
             float instr[] = new float[0];
             int nInstr = 0; // no lamp function
-            int noise = 2; // Poisson noise
+            int noise = 0; //2; // Poisson noise
             float sig[] = new float[stop+1];
             for (int i = 0; i < sig.length; ++i) {
                 sig[i] = 1.0f; // ignore sig
@@ -179,19 +180,20 @@ System.out.println("returnValue " + returnValue + " z " + z.getValue() + " a " +
                 float param[] = new float[3];
                 param[0] = (float) data.getParams()[2];        // z
                 param[1] = (float) data.getParams()[0];        // A
-                param[2] = 1.0f / (float) data.getParams()[1]; // tau from lambda
+                //TODO param[2] = 1.0f / (float) data.getParams()[1]; // tau from lambda
+                param[2] = (float) data.getParams()[1];
 
-                System.out.println("Incoming params z " + data.getParams()[2] + " A " + data.getParams()[0] + " lambda " + data.getParams()[1]);
+//System.out.println("Incoming params z " + data.getParams()[2] + " A " + data.getParams()[0] + " lambda " + data.getParams()[1]);
  
 // float param[] = doubleToFloat(data.getParams());
                 int nParams = param.length;
-      System.out.println("nParams is " + nParams);
+//System.out.println("nParams is " + nParams);
 // param[1] = 1.0f / param[1];
                 int paramFree[] = new int[nParams];
                 for (int i = 0; i < nParams; ++i) {
                     paramFree[i] = 1;
                 }
-                System.out.println("paramFree length is " + paramFree.length);
+//System.out.println("paramFree length is " + paramFree.length);
                 int restrainType = 0; //TODO 1 doesn't work; internally s/b calling "GCS_set_restrain_limits" but doesn't!!
                 int fitType = 0;
                 //float covar[][] = new float[stop+1][stop+1];
@@ -203,7 +205,7 @@ System.out.println("returnValue " + returnValue + " z " + z.getValue() + " a " +
                 float alphaX[] = new float[(stop+1)*(stop+1)];
                 float errAxesX[] = new float[(stop+1)*(stop+1)];
 
-System.out.println("xinc " + xincr + " start " + fitStart + " end " + fitEnd + " chiSqTarget " + chiSqTarget);
+//System.out.println("xinc " + xincr + " start " + fitStart + " end " + fitEnd + " chiSqTarget " + chiSqTarget);
                 int returnValue = lib.nr_GCI_marquardt_fitting_engine(xincr, y, nData, fitStart, fitEnd,
                                                                            instr, nInstr, noise, sig,
                                                                            param, paramFree, nParams,
@@ -219,14 +221,16 @@ System.out.println("xinc " + xincr + " start " + fitStart + " end " + fitEnd + "
 
 
 
-System.out.println("HELLO returnValue z A tau = " + returnValue + " " + param[0] + " " + param[1] + " " + param[2]);
+//System.out.println("HELLO returnValue z A tau = " + returnValue + " " + param[0] + " " + param[1] + " " + param[2]);
+                data.setYFitted(floatToDouble(fitted));
                 //data.setYFitted()
                 double dParam[] = new double[3];
                 dParam[0] = param[1];       // A
-                dParam[1] = 1.0 / param[2]; // lambda from tau
+                //TODO ARG dParam[1] = 1.0 / param[2]; // lambda from tau
+                dParam[1] = param[2];
                 dParam[2] = param[0];       // z
                 data.setParams(dParam);
-System.out.println("returning A " + dParam[0] + " lambda " + dParam[1] + " z " + dParam[2]);
+//System.out.println("returning A " + dParam[0] + " lambda " + dParam[1] + " z " + dParam[2]);
 
 
 //param[1] = 1.0f / param[1];

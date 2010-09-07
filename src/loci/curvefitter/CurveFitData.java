@@ -11,6 +11,7 @@ package loci.curvefitter;
  */
 public class CurveFitData implements ICurveFitData {
     double[] m_params;
+    boolean[] m_free;
     double[] m_yData;
     double[] m_yFitted;
     Object m_userData;
@@ -27,6 +28,20 @@ public class CurveFitData implements ICurveFitData {
      */
     public void setParams(double[] params) {
         m_params = params;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public boolean[] getFree() {
+        return m_free;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public void setFree(boolean[] free) {
+        m_free = free;
     }
 
     /**

@@ -32,28 +32,40 @@ public interface ICurveFitData {
     public void setParams(double[] params);
 
     /**
-     * Get input data for the fit.  Input only.
+     * Gets which parameters are free (vs. fixed). Input to fit only.
+     *
+     * @return array of booleans
+     */
+    public boolean[] getFree();
+
+    /**
+     * Sets which parameters are free (vs. fixed).  Input to fit only.
+     */
+    public void setFree(boolean[] free);
+
+    /**
+     * Get input data for the fit.  Input to fit only.
      *
      * @return array of data
      */
     public double[] getYData();
 
     /**
-     * Set input data for the fit.  Input only.
+     * Set input data for the fit.  Input to fit only.
      *
      * @param yData array of data
      */
     public void setYData(double yData[]);
     
     /**
-     * Gets fitted data from the fit.  Output only.
+     * Gets fitted data from the fit.  Output from fit only.
      *
      * @return array of fitted data
      */
     public double[] getYFitted(); //TODO is this efficient for OpenCL???? s/b asynchronous, don't wait for results???
 
     /**
-     * Sets fitted data from the fit.  Output only.
+     * Sets fitted data from the fit.  Output from fit only.
      *
      * @param yFit array of fitted data
      */
