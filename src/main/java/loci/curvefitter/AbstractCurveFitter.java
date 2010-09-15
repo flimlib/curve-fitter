@@ -46,6 +46,7 @@ package loci.curvefitter;
 public abstract class AbstractCurveFitter implements ICurveFitter {
     int m_curveType = ICurveFitter.EXPONENTIAL;
     double m_xInc = ICurveFitter.DEFAULT_X_INC;
+    boolean[] m_free;
     
     /**
      * @inheritDoc
@@ -78,7 +79,21 @@ public abstract class AbstractCurveFitter implements ICurveFitter {
     /**
      * @inheritDoc
      */
-    public int fitData(ICurveFitData[] data) {
+    public boolean[] getFree() {
+        return m_free;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public void setFree(boolean[] free) {
+        m_free = free;
+    }
+
+    /**
+     * @inheritDoc
+     */
+     public int fitData(ICurveFitData[] data) {
         int nData = data[0].getYData().length;
         return fitData(data, 0, nData - 1);
     }
