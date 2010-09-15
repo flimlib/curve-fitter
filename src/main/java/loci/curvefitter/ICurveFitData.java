@@ -65,18 +65,6 @@ public interface ICurveFitData {
     public void setParams(double[] params);
 
     /**
-     * Gets which parameters are free (vs. fixed). Input to fit only.
-     *
-     * @return array of booleans
-     */
-    public boolean[] getFree();
-
-    /**
-     * Sets which parameters are free (vs. fixed).  Input to fit only.
-     */
-    public void setFree(boolean[] free);
-
-    /**
      * Get input data for the fit.  Input to fit only.
      *
      * @return array of data
