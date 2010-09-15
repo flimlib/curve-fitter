@@ -50,6 +50,7 @@ import com.sun.jna.Platform;
  * @author Aivar Grislis grislis at wisc.edu
  */
 public class GrayNRCurveFitter extends AbstractCurveFitter {
+    static CLibrary s_library;
     int m_algType;
 
     public interface CLibrary extends Library {
@@ -134,7 +135,16 @@ public class GrayNRCurveFitter extends AbstractCurveFitter {
      */
     public int fitData(ICurveFitData[] dataArray, int start, int stop) {
         int returnValue = 0;
- 	CLibrary lib = (CLibrary) Native.loadLibrary("GrayNRCode", CLibrary.class);
+        if (null == s_library) {
+            try {
+                // load once, on-demand
+                s_library = (CLibrary) Native.loadLibrary("GrayNRCode", CLibrary.class);
+            }
+            catch (UnsatisfiedLinkError e) {
+                System.out.println("unable to load dynamic library " + e.getMessage());
+                return 0;
+            }
+        }
 
         //TODO ARG 9/3/10 these issues still need to be addressed:
 
@@ -145,6 +155,11 @@ public class GrayNRCurveFitter extends AbstractCurveFitter {
 
         DoubleByReference chiSquare = new DoubleByReference();
         double chiSquareTarget = 1.0; //TODO s/b specified incoming
+        
+        double sig[] = new double[stop+1];
+        for (int i = 0; i < sig.length; ++i) {
+        	sig[i] = 1.0; // basically ignoring sig for now
+        }
 
         if (0 == m_algType) { //TODO crude; use enums
             // RLD or triple integral fit
@@ -152,29 +167,24 @@ public class GrayNRCurveFitter extends AbstractCurveFitter {
             DoubleByReference a = new DoubleByReference();
             DoubleByReference tau = new DoubleByReference();
 
-            double sig[] = new double[stop+1];
-            for (int i = 0; i < sig.length; ++i) {
-                sig[i] = 1.0; // basically ignoring sig
-            }
-
             for (ICurveFitData data: dataArray) {
                 // grab incoming parameters
                 a.setValue(data.getParams()[0]);
                 tau.setValue(1.0 / data.getParams()[1]); // convert lambda to tau
                 z.setValue(data.getParams()[2]);
 
-                returnValue = lib.RLD_fit(
+                returnValue = s_library.RLD_fit(
                         m_xInc,
                         data.getYData(), //TODO data get data???
                         start,
                         stop,
                         null, // no instr
                         0,    // nInstr
-                        null, // no sig
+                        sig,
                         z,
                         a,
                         tau,
-                        null, //fitted,
+                        data.getYFitted(),
                         chiSquare,
                         chiSquareTarget
                         );
@@ -188,16 +198,16 @@ public class GrayNRCurveFitter extends AbstractCurveFitter {
         else {
             // LMA fit
             for (ICurveFitData data: dataArray) {
-                returnValue = lib.LMA_fit(
+                returnValue = s_library.LMA_fit(
                         m_xInc,
                         data.getYData(),
                         start,
                         stop,
                         null, // no instr
                         0,    // nInstr
-                        null, // no sig
+                        sig,
                         data.getParams(),
-                        toIntArray(data.getFree()),
+                        toIntArray(m_free),
                         data.getParams().length,
                         data.getYFitted(),
                         chiSquare,
