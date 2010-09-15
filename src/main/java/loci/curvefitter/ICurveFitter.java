@@ -89,6 +89,18 @@ public interface ICurveFitter {
     public void setXInc(double xInc);
 
     /**
+     * Gets which parameters are free (vs. fixed).
+     *
+     * @return array of booleans
+     */
+    public boolean[] getFree();
+
+    /**
+     * Sets which parameters are free (vs. fixed).
+     */
+    public void setFree(boolean[] free);
+
+    /**
      * Do the fit.
      *
      * @param data array of data to fit
