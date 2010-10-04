@@ -69,14 +69,28 @@ public interface ICurveFitData {
      *
      * @return array of data
      */
-    public double[] getYData();
+    public double[] getYCount();
 
     /**
      * Set input data for the fit.  Input to fit only.
      *
-     * @param yData array of data
+     * @param yCount array of data
      */
-    public void setYData(double yData[]);
+    public void setYCount(double yCount[]);
+
+    /**
+     * Get error for the fit data.  Input to fit only.
+     *
+     * @return array of error data or null if not set.
+     */
+    public double[] getSig();
+
+    /**
+     * Set error for the fit data.  Input to fit only.
+     *
+     * @param sig array of error data.
+     */
+    public void setSig(double sig[]);
     
     /**
      * Gets fitted data from the fit.  Output from fit only.
@@ -91,19 +105,4 @@ public interface ICurveFitData {
      * @param yFit array of fitted data
      */
     public void setYFitted(double yFit[]);
-
-    /**
-     * Keeps track of user data on behalf of caller.
-     *
-     * @return user data
-     */
-    public Object getUserData();
-
-    /**
-     * Keeps track of user data on behalf of caller.
-     *
-     * @param data user data
-     */
-    public void setUserData(Object data);
-
 }
