@@ -46,7 +46,8 @@ package loci.curvefitter;
 public class CurveFitData implements ICurveFitData {
     double[] m_params;
     boolean[] m_free;
-    double[] m_yData;
+    double[] m_yCount;
+    double[] m_sig;
     double[] m_yFitted;
     Object m_userData;
 
@@ -81,15 +82,29 @@ public class CurveFitData implements ICurveFitData {
     /**
      * @inheritDoc
      */
-    public double[] getYData() {
-        return m_yData;
+    public double[] getYCount() {
+        return m_yCount;
     }
 
     /**
      * @inheritDoc
      */
-    public void setYData(double yData[]) {
-        m_yData = yData;
+    public void setYCount(double yCount[]) {
+        m_yCount = yCount;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public double[] getSig() {
+        return m_sig;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public void setSig(double sig[]) {
+        m_sig = sig;
     }
 
     /**
@@ -104,19 +119,5 @@ public class CurveFitData implements ICurveFitData {
      */
     public void setYFitted(double yFitted[]) {
         m_yFitted = yFitted;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public Object getUserData() {
-        return m_userData;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public void setUserData(Object userData) {
-        m_userData = userData;
     }
 }
