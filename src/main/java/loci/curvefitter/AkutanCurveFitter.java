@@ -75,9 +75,9 @@ public class AkutanCurveFitter extends AbstractCurveFitter {
 
         for (ICurveFitData data: dataArray) {
             // initialize y array
-            double yData[] = data.getYData();
+            double yCount[] = data.getYCount();
             for (int i = 0; i < length; ++i) {
-                y.set(i, yData[start + i]);
+                y.set(i, yCount[start + i]);
             }
 
             // find the solution
