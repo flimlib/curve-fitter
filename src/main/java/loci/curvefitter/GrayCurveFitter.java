@@ -137,7 +137,7 @@ public class GrayCurveFitter extends AbstractCurveFitter {
 
             double params[] = new double[3];
             for (ICurveFitData data: dataArray) {
-                float y[] = doubleToFloat(data.getYData());
+                float y[] = doubleToFloat(data.getYCount());
 
                 //for (int i = 0; i < y.length; ++i) {
                 //    System.out.println("y[" + i + "] is " + y[i]);
@@ -202,8 +202,8 @@ public class GrayCurveFitter extends AbstractCurveFitter {
             double params[] = new double[3];
 
             for (ICurveFitData data: dataArray) {
-                int nData = data.getYData().length;
-                float y[] = doubleToFloat(data.getYData());
+                int nData = data.getYCount().length;
+                float y[] = doubleToFloat(data.getYCount());
 
                 //for (int i = 0; i < y.length; ++i) {
                 //    System.out.println("y[" + i + "] is " + y[i]);
