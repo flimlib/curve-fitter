@@ -175,7 +175,7 @@ public class GrayNRCurveFitter extends AbstractCurveFitter {
 
                 returnValue = s_library.RLD_fit(
                         m_xInc,
-                        data.getYData(), //TODO data get data???
+                        data.getYCount(),
                         start,
                         stop,
                         null, // no instr
@@ -200,7 +200,7 @@ public class GrayNRCurveFitter extends AbstractCurveFitter {
             for (ICurveFitData data: dataArray) {
                 returnValue = s_library.LMA_fit(
                         m_xInc,
-                        data.getYData(),
+                        data.getYCount(),
                         start,
                         stop,
                         null, // no instr
