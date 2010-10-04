@@ -71,7 +71,7 @@ public class JaolhoCurveFitter extends AbstractCurveFitter {
 	//lma = new LMA(function, lmaWeights, lmaData);
 
         for (ICurveFitData data: dataArray) {
-            double yData[] = data.getYData();
+            double yData[] = data.getYCount();
             for (int i = 0; i < length; ++i) {
                 lmaData[1][i] = yData[start + i];
             }
@@ -90,7 +90,6 @@ public class JaolhoCurveFitter extends AbstractCurveFitter {
                 ++badPixels;
                 success = false;
                 System.out.println("exception " + e);
-                log("exception " + e);
             }
 
             if (lma.parameters[1] > 0.0f && lma.parameters[1] < 100.0f && lma.parameters[1] != 1.0f) {
@@ -100,8 +99,6 @@ public class JaolhoCurveFitter extends AbstractCurveFitter {
             if (false && success) {
                 System.out.println("iterations: " + lma.iterationCount);
                 System.out.println("chi2: " + lma.chi2 + ", param0: " + lma.parameters[0] + ", param1: " + lma.parameters[1] + ", param2: " + lma.parameters[2]);
-                log("iterations: " + lma.iterationCount);
-                log("chi2: " + lma.chi2 + ", param0: " + lma.parameters[0] + ", param1: " + lma.parameters[1] + ", param2: " + lma.parameters[2]);
             }
 
             for (int i = 0; i < length; ++i) {
@@ -112,7 +109,6 @@ public class JaolhoCurveFitter extends AbstractCurveFitter {
             }
         }
         System.out.println("goodPixels " + goodPixels + " badPixels " + badPixels);
-        log("goodPixels " + goodPixels + " badPixels " + badPixels);
         //TODO error return deserves more thought
         return 0;
     }
