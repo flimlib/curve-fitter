@@ -47,6 +47,7 @@ public abstract class AbstractCurveFitter implements ICurveFitter {
     int m_curveType = ICurveFitter.EXPONENTIAL;
     double m_xInc = ICurveFitter.DEFAULT_X_INC;
     boolean[] m_free;
+    double[] m_instrumentResponse;
     
     /**
      * @inheritDoc
@@ -93,8 +94,22 @@ public abstract class AbstractCurveFitter implements ICurveFitter {
     /**
      * @inheritDoc
      */
+    public double[] getInstrumentResponse() {
+        return m_instrumentResponse;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public void setInstrumentResponse(double response[]) {
+        m_instrumentResponse = response;
+    }
+
+    /**
+     * @inheritDoc
+     */
      public int fitData(ICurveFitData[] data) {
-        int nData = data[0].getYData().length;
+        int nData = data[0].getYCount().length;
         return fitData(data, 0, nData - 1);
     }
 
@@ -102,11 +117,5 @@ public abstract class AbstractCurveFitter implements ICurveFitter {
      * @inheritDoc
      */
     abstract public int fitData(ICurveFitData[] data, int start, int stop);
-
-    public void log(String msg) {
-      // TODO: Use SLF4J for logging?
-      System.out.println(msg);
-    }
-
 }
 
