@@ -139,6 +139,7 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
             try {
                 // load once, on-demand
                 s_library = (CLibrary) Native.loadLibrary("SLIMCurve", CLibrary.class);
+                System.out.println("s_library is " + s_library);
             }
             catch (UnsatisfiedLinkError e) {
                 System.out.println("unable to load dynamic library " + e.getMessage());
@@ -156,11 +157,6 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
         DoubleByReference chiSquare = new DoubleByReference();
         double chiSquareTarget = 1.0; //TODO s/b specified incoming
 
-        double sig[] = new double[stop+1];
-        for (int i = 0; i < sig.length; ++i) {
-        	sig[i] = 1.0; // basically ignoring sig for now
-        }
-
         if (0 == m_algType) { //TODO crude; use enums
             // RLD or triple integral fit
             DoubleByReference z = new DoubleByReference();
@@ -173,14 +169,19 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                 tau.setValue(1.0 / data.getParams()[1]); // convert lambda to tau
                 z.setValue(data.getParams()[2]);
 
+                int nInstrumentResponse = 0;
+                if (null != m_instrumentResponse) {
+                    nInstrumentResponse = m_instrumentResponse.length;
+                }
+
                 returnValue = s_library.RLD_fit(
                         m_xInc,
-                        data.getYData(), //TODO data get data???
+                        data.getYCount(), //TODO data get data???
                         start,
                         stop,
-                        null, // no instr
-                        0,    // nInstr
-                        sig,
+                        m_instrumentResponse,
+                        nInstrumentResponse,
+                        data.getSig(),
                         z,
                         a,
                         tau,
@@ -197,14 +198,18 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
         else {
             // LMA fit
             for (ICurveFitData data: dataArray) {
+                int nInstrumentResponse = 0;
+                if (null != m_instrumentResponse) {
+                    nInstrumentResponse = m_instrumentResponse.length;
+                }
                 returnValue = s_library.LMA_fit(
                         m_xInc,
-                        data.getYData(),
+                        data.getYCount(),
                         start,
                         stop,
-                        null, // no instr
-                        0,    // nInstr
-                        sig,
+                        m_instrumentResponse,
+                        nInstrumentResponse,
+                        data.getSig(),
                         data.getParams(),
                         toIntArray(m_free),
                         data.getParams().length,
