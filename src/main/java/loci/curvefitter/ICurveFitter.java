@@ -101,6 +101,20 @@ public interface ICurveFitter {
     public void setFree(boolean[] free);
 
     /**
+     * Get instrument resopnse data.  Input to fit only.
+     *
+     * @return array of data or null if not set
+     */
+    public double[] getInstrumentResponse();
+
+    /**
+     * Set instrument response data.  Input to fit only.
+     *
+     * @param response array of data
+     */
+    public void setInstrumentResponse(double response[]);
+
+    /**
      * Do the fit.
      *
      * @param data array of data to fit
