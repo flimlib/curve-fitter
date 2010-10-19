@@ -92,14 +92,14 @@ public class JaolhoCurveFitter extends AbstractCurveFitter {
                 System.out.println("exception " + e);
             }
 
-            if (lma.parameters[1] > 0.0f && lma.parameters[1] < 100.0f && lma.parameters[1] != 1.0f) {
-                System.out.println("chi2: " + lma.chi2 + ", param0: " + lma.parameters[0] + ", param1: " + lma.parameters[1] + ", param2: " + lma.parameters[2]);
-            }
+            //if (lma.parameters[1] > 0.0f && lma.parameters[1] < 100.0f && lma.parameters[1] != 1.0f) {
+            //    System.out.println("chi2: " + lma.chi2 + ", param0: " + lma.parameters[0] + ", param1: " + lma.parameters[1] + ", param2: " + lma.parameters[2]);
+            //}
 
-            if (false && success) {
-                System.out.println("iterations: " + lma.iterationCount);
-                System.out.println("chi2: " + lma.chi2 + ", param0: " + lma.parameters[0] + ", param1: " + lma.parameters[1] + ", param2: " + lma.parameters[2]);
-            }
+            //if (false && success) {
+            //    System.out.println("iterations: " + lma.iterationCount);
+            //    System.out.println("chi2: " + lma.chi2 + ", param0: " + lma.parameters[0] + ", param1: " + lma.parameters[1] + ", param2: " + lma.parameters[2]);
+            //}
 
             for (int i = 0; i < length; ++i) {
                 data.getYFitted()[start + i] = function.getY(lmaData[0][i], lma.parameters);
@@ -108,7 +108,7 @@ public class JaolhoCurveFitter extends AbstractCurveFitter {
                 data.getParams()[i] = lma.parameters[i];
             }
         }
-        System.out.println("goodPixels " + goodPixels + " badPixels " + badPixels);
+        //System.out.println("goodPixels " + goodPixels + " badPixels " + badPixels);
         //TODO error return deserves more thought
         return 0;
     }
