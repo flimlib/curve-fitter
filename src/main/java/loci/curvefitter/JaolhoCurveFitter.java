@@ -107,6 +107,7 @@ public class JaolhoCurveFitter extends AbstractCurveFitter {
             for (int i = 0; i < data.getParams().length; ++i) {
                 data.getParams()[i] = lma.parameters[i];
             }
+            data.setChiSquare(lma.chi2);
         }
         //System.out.println("goodPixels " + goodPixels + " badPixels " + badPixels);
         //TODO error return deserves more thought
