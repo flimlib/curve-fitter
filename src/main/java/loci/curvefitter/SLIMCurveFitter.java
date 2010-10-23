@@ -193,6 +193,7 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                 data.getParams()[0] = a.getValue();
                 data.getParams()[1] = 1.0 / tau.getValue();
                 data.getParams()[2] = z.getValue();
+                data.setChiSquare(chiSquare.getValue());
             }
         }
         else {
@@ -217,6 +218,8 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                         chiSquare,
                         chiSquareTarget
                         );
+                // set outgoing parameter
+                data.setChiSquare(chiSquare.getValue());
             }
         }
         //TODO error return deserves more thought
