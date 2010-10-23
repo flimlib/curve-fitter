@@ -105,4 +105,18 @@ public interface ICurveFitData {
      * @param yFit array of fitted data
      */
     public void setYFitted(double yFit[]);
+
+    /**
+     * Gets chi square of fit.  Output from fit only.
+     *
+     * @return chi square
+     */
+    public double getChiSquare();
+
+    /**
+     * Sets chi square of fit.
+     *
+     * @param chiSquare
+     */
+    public void setChiSquare(double chiSquare);
 }
