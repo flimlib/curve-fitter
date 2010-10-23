@@ -49,6 +49,7 @@ public class CurveFitData implements ICurveFitData {
     double[] m_yCount;
     double[] m_sig;
     double[] m_yFitted;
+    double m_chiSquare;
     Object m_userData;
 
     /**
@@ -119,5 +120,19 @@ public class CurveFitData implements ICurveFitData {
      */
     public void setYFitted(double yFitted[]) {
         m_yFitted = yFitted;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public double getChiSquare() {
+        return m_chiSquare;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public void setChiSquare(double chiSquare) {
+        m_chiSquare = chiSquare;
     }
 }
