@@ -66,8 +66,24 @@ public class JaolhoCurveFitter extends AbstractCurveFitter {
             lmaData[0][i] = x_value;
             x_value += m_xInc;
         }
+
+        int numberExponentials = 0;
+        int numberParams = dataArray[0].getParams().length;
+        if (3 == numberParams) {
+            numberExponentials = 1;
+        }
+        else if (5 == numberParams) {
+            numberExponentials = 2;
+        }
+        else if (7 == numberParams) {
+            numberExponentials = 3;
+        }
+        if (0 == numberExponentials) {
+            System.out.println("invalid number of parameters: " + numberParams);
+            return 0;
+        }
         
-        function = new ExpFunction(1);
+        function = new ExpFunction(numberExponentials);
 	//lma = new LMA(function, lmaWeights, lmaData);
 
         for (ICurveFitData data: dataArray) {
