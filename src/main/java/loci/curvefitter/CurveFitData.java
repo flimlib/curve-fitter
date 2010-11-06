@@ -44,6 +44,8 @@ package loci.curvefitter;
  * @author Aivar Grislis grislis at wisc.edu
  */
 public class CurveFitData implements ICurveFitData {
+    int m_x;
+    int m_y;
     double[] m_params;
     boolean[] m_free;
     double[] m_yCount;
@@ -51,6 +53,34 @@ public class CurveFitData implements ICurveFitData {
     double[] m_yFitted;
     double m_chiSquare;
     Object m_userData;
+
+    /**
+     * @inheritDoc
+     */
+    public int getX() {
+        return m_x;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public void setX(int x) {
+        m_x = x;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public int getY() {
+        return m_y;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public void setY(int y) {
+        m_y = y;
+    }
 
     /**
      * @inheritDoc
