@@ -49,6 +49,34 @@ package loci.curvefitter;
 public interface ICurveFitData {
 
     /**
+     * Gets x location of the fitted pixel.
+     *
+     * @return x
+     */
+    public int getX();
+
+    /**
+     * Sets x location of the fitted pixel.
+     *
+     * @param x
+     */
+    public void setX(int x);
+
+    /**
+     * Gets y location of the fitted pixel.
+     *
+     * @return y
+     */
+    public int getY();
+
+    /**
+     * Sets y location of the fitted pixel.
+     *
+     * @param y
+     */
+    public void setY(int y);
+
+    /**
      * Gets parameters of the fit.  Could represent multiple components.
      * Input and output to the fit.
      *
