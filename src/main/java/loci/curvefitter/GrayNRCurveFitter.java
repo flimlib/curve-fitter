@@ -170,7 +170,7 @@ public class GrayNRCurveFitter extends AbstractCurveFitter {
             for (ICurveFitData data: dataArray) {
                 // grab incoming parameters
                 a.setValue(data.getParams()[0]);
-                tau.setValue(1.0 / data.getParams()[1]); // convert lambda to tau
+                tau.setValue(data.getParams()[1]);
                 z.setValue(data.getParams()[2]);
 
                 returnValue = s_library.RLD_fit(
@@ -191,7 +191,7 @@ public class GrayNRCurveFitter extends AbstractCurveFitter {
 
                 // set outgoing parameters
                 data.getParams()[0] = a.getValue();
-                data.getParams()[1] = 1.0 / tau.getValue();
+                data.getParams()[1] = tau.getValue();
                 data.getParams()[2] = z.getValue();
             }
         }
