@@ -151,7 +151,7 @@ public class JaolhoCurveFitter extends AbstractCurveFitter {
       for (int e=0; e<numExp; e++) {
         double aTerm = a[2 * e];
         double bTerm = a[2 * e + 1];
-        sum += aTerm * Math.exp(-bTerm * x);
+        sum += aTerm * Math.exp(-x / bTerm);
       }
       double cTerm = a[2 * numExp];
       sum += cTerm;
@@ -166,9 +166,9 @@ public class JaolhoCurveFitter extends AbstractCurveFitter {
       double bTerm = a[2 * e + 1];
       switch (off) {
         case 0:
-          return Math.exp(-bTerm * x); // a term
+          return Math.exp(-x / bTerm); // a term
         case 1:
-          return -aTerm * x * Math.exp(-bTerm * x); // b term
+          return -aTerm * x * Math.exp(-x / bTerm); // b term
       }
       throw new RuntimeException("No such parameter index: " +
         parameterIndex);
