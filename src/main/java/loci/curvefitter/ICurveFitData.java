@@ -49,6 +49,20 @@ package loci.curvefitter;
 public interface ICurveFitData {
 
     /**
+     * Gets channel of the fitted pixel.
+     *
+     * @return channel
+     */
+    public int getChannel();
+
+    /**
+     * Sets channel of the fitted pixel.
+     *
+     * @param channel
+     */
+    public void setChannel(int channel);
+    
+    /**
      * Gets x location of the fitted pixel.
      *
      * @return x
