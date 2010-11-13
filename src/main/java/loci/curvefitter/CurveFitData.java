@@ -44,6 +44,7 @@ package loci.curvefitter;
  * @author Aivar Grislis grislis at wisc.edu
  */
 public class CurveFitData implements ICurveFitData {
+    int m_channel;
     int m_x;
     int m_y;
     double[] m_params;
@@ -53,6 +54,20 @@ public class CurveFitData implements ICurveFitData {
     double[] m_yFitted;
     double m_chiSquare;
     Object m_userData;
+
+    /**
+     * @inheritDoc
+     */
+    public int getChannel() {
+        return m_channel;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public void setChannel(int channel) {
+        m_channel = channel;
+    }
 
     /**
      * @inheritDoc
