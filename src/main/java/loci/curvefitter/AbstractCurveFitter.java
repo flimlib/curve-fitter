@@ -37,14 +37,11 @@ package loci.curvefitter;
 /**
  * Abstract base class for curve fitters.
  *
- * <dl><dt><b>Source code:</b></dt>
- * <dd><a href="http://dev.loci.wisc.edu/trac/java/browser/trunk/projects/curve-fitter/src/main/java/loci/curvefitter/AbstractCurveFitter.java">Trac</a>,
- * <a href="http://dev.loci.wisc.edu/svn/java/trunk/projects/curve-fitter/src/main/java/loci/curvefitter/AbstractCurveFitter.java">SVN</a></dd></dl>
+ * @author Aivar Grislis
  *
- * @author Aivar Grislis grislis at wisc.edu
  */
 public abstract class AbstractCurveFitter implements ICurveFitter {
-    int m_curveType = ICurveFitter.EXPONENTIAL;
+    FitFunction m_fitFunction;
     double m_xInc = ICurveFitter.DEFAULT_X_INC;
     boolean[] m_free;
     double[] m_instrumentResponse;
@@ -52,15 +49,27 @@ public abstract class AbstractCurveFitter implements ICurveFitter {
     /**
      * @inheritDoc
      */
-    public int getCurveType() {
-        return m_curveType;
+    public FitFunction getFitFunction() {
+        return m_fitFunction;
     }
     
     /**
      * @inheritDoc
      */
-    public void setCurveType(int curveType) {
-        m_curveType = curveType;
+    public void setFitFunction(FitFunction function) {
+        m_fitFunction = function;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public int getNumberComponents() {
+        int number = 0;
+        if (null != m_fitFunction) {
+            int fitFunctionComponents[] = { 1, 2, 3, 1 };
+            number = fitFunctionComponents[m_fitFunction.ordinal()];
+        }
+        return number;
     }
 
     /**
