@@ -37,11 +37,7 @@ package loci.curvefitter;
 /**
  * Interface to the curve fitting data.
  *
- * <dl><dt><b>Source code:</b></dt>
- * <dd><a href="http://dev.loci.wisc.edu/trac/java/browser/trunk/projects/curve-fitter/src/main/java/loci/curvefitter/ICurveFitData.java">Trac</a>,
- * <a href="http://dev.loci.wisc.edu/svn/java/trunk/projects/curve-fitter/src/main/java/loci/curvefitter/ICurveFitData.java">SVN</a></dd></dl>
- *
- * @author Aivar Grislis grislis at wisc.edu
+ * @author Aivar Grislis
  */
 //TODO fix params
 //TODO num components?
@@ -153,12 +149,12 @@ public interface ICurveFitData {
      *
      * @return chi square
      */
-    public double getChiSquare();
+   // public double getChiSquare();
 
     /**
      * Sets chi square of fit.
      *
      * @param chiSquare
      */
-    public void setChiSquare(double chiSquare);
+   // public void setChiSquare(double chiSquare);
 }
