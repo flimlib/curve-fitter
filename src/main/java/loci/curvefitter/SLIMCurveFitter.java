@@ -51,7 +51,8 @@ import com.sun.jna.Platform;
  */
 public class SLIMCurveFitter extends AbstractCurveFitter {
     static CLibrary s_library;
-    int m_algType;
+    public enum AlgorithmType { RLD, LMA };
+    private AlgorithmType m_algorithmType;
 
     public interface CLibrary extends Library {
 
@@ -121,12 +122,12 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
 									float chisq_target, int chisq_percent) {*/
     }
 
-    public SLIMCurveFitter(int algType) {
-        m_algType = algType;
+    public SLIMCurveFitter(AlgorithmType algorithmType) {
+        m_algorithmType = algorithmType;
     }
 
     public SLIMCurveFitter() {
-        m_algType = 0;
+        m_algorithmType = AlgorithmType.RLD;
     }
 
 
@@ -157,7 +158,7 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
         DoubleByReference chiSquare = new DoubleByReference();
         double chiSquareTarget = 1.0; //TODO s/b specified incoming
 
-        if (0 == m_algType) { //TODO crude; use enums
+        if (AlgorithmType.RLD.equals(m_algorithmType)) {
             // RLD or triple integral fit
             DoubleByReference z = new DoubleByReference();
             DoubleByReference a = new DoubleByReference();
@@ -165,9 +166,9 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
 
             for (ICurveFitData data: dataArray) {
                 // grab incoming parameters
-                a.setValue(data.getParams()[0]);
-                tau.setValue(data.getParams()[1]);
-                z.setValue(data.getParams()[2]);
+                a.setValue(  data.getParams()[2]);
+                tau.setValue(data.getParams()[3]);
+                z.setValue(  data.getParams()[1]);
 
                 int nInstrumentResponse = 0;
                 if (null != m_instrumentResponse) {
@@ -190,10 +191,10 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                         chiSquareTarget
                         );
                // set outgoing parameters
-                data.getParams()[0] = a.getValue();
-                data.getParams()[1] = tau.getValue();
-                data.getParams()[2] = z.getValue();
-                data.setChiSquare(chiSquare.getValue());
+                data.getParams()[0] = chiSquare.getValue();
+                data.getParams()[1] = z.getValue();
+                data.getParams()[2] = a.getValue();
+                data.getParams()[3] = tau.getValue();
             }
         }
         else {
@@ -213,13 +214,11 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                         data.getSig(),
                         data.getParams(),
                         toIntArray(m_free),
-                        data.getParams().length,
+                        data.getParams().length - 1,
                         data.getYFitted(),
                         chiSquare,
                         chiSquareTarget
                         );
-                // set outgoing parameter
-                data.setChiSquare(chiSquare.getValue());
             }
         }
         //TODO error return deserves more thought
