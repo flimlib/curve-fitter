@@ -37,23 +37,16 @@ package loci.curvefitter;
 /**
  * Interface for a curve fitter.
  *
- * <dl><dt><b>Source code:</b></dt>
- * <dd><a href="http://dev.loci.wisc.edu/trac/java/browser/trunk/projects/curve-fitter/src/main/java/loci/curvefitter/ICurveFitter.java">Trac</a>,
- * <a href="http://dev.loci.wisc.edu/svn/java/trunk/projects/curve-fitter/src/main/java/loci/curvefitter/ICurveFitter.java">SVN</a></dd></dl>
- *
- * @author Aivar Grislis grislis at wisc.edu
+ * @author Aivar Grislis
  */
-//TODO max iterations; c/b used in lieu of 'iterate()'??
 public interface ICurveFitter {
-    /**
-     * Fitting a Gaussian curve.
-     */
-    public int GAUSSIAN = 0; //TODO s/b enums
 
     /**
-     * Fitting an Exponential curve.
+     * Specifies curves that this fits.
      */
-    public int EXPONENTIAL = 1;
+    public enum FitFunction {
+        SINGLE_EXPONENTIAL, DOUBLE_EXPONENTIAL, TRIPLE_EXPONENTIAL, STRETCHED_EXPONENTIAL
+    }
 
     /**
      * Default increment along x axis (evenly spaced).
@@ -61,18 +54,25 @@ public interface ICurveFitter {
     public double DEFAULT_X_INC = 1.0f;
 
     /**
-     * Get curve shape we are fitting.
+     * Get function we are fitting.
      *
-     * @return curve type
+     * @return function type
      */
-    int getCurveType();
+    public FitFunction getFitFunction();
 
     /**
-     * Set curve shape we are fitting.
+     * Set function we are fitting.
      *
-     * @param curveType type of curve
+     * @param function
      */
-    public void setCurveType(int curveType);
+    public void setFitFunction(FitFunction function);
+
+    /**
+     * Get number of function components.
+     *
+     * @return number of components
+     */
+    public int getNumberComponents();
 
     /**
      * Get increment along x axis (evenly spaced).
@@ -101,7 +101,7 @@ public interface ICurveFitter {
     public void setFree(boolean[] free);
 
     /**
-     * Get instrument resopnse data.  Input to fit only.
+     * Get instrument response data.  Input to fit only.
      *
      * @return array of data or null if not set
      */
