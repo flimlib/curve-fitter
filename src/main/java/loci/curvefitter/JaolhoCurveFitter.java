@@ -38,13 +38,9 @@ import jaolho.data.lma.LMA;
 import jaolho.data.lma.LMAFunction;
 
 /**
- * TODO
+ * Curve fitter that uses the Jaolho curve fitting package.
  *
- * <dl><dt><b>Source code:</b></dt>
- * <dd><a href="http://dev.loci.wisc.edu/trac/java/browser/trunk/projects/curve-fitter/src/main/java/loci/curvefitter/JaolhoCurveFitter.java">Trac</a>,
- * <a href="http://dev.loci.wisc.edu/svn/java/trunk/projects/curve-fitter/src/main/java/loci/curvefitter/JaolhoCurveFitter.java">SVN</a></dd></dl>
- *
- * @author Aivar Grislis grislis at wisc.edu
+ * @author Aivar Grislis
  */
 public class JaolhoCurveFitter extends AbstractCurveFitter {
 
@@ -67,24 +63,11 @@ public class JaolhoCurveFitter extends AbstractCurveFitter {
             x_value += m_xInc;
         }
 
-        int numberExponentials = 0;
-        int numberParams = dataArray[0].getParams().length;
-        if (3 == numberParams) {
-            numberExponentials = 1;
-        }
-        else if (5 == numberParams) {
-            numberExponentials = 2;
-        }
-        else if (7 == numberParams) {
-            numberExponentials = 3;
-        }
-        if (0 == numberExponentials) {
-            System.out.println("invalid number of parameters: " + numberParams);
+        if (ICurveFitter.FitFunction.STRETCHED_EXPONENTIAL.equals(getFitFunction())) {
+            System.out.println("Stretched exponentials not supported in Jaolho at this time.");
             return 0;
         }
-        
-        function = new ExpFunction(numberExponentials);
-	//lma = new LMA(function, lmaWeights, lmaData);
+        function = new ExpFunction(getNumberComponents());
 
         for (ICurveFitData data: dataArray) {
             double yData[] = data.getYCount();
@@ -92,10 +75,32 @@ public class JaolhoCurveFitter extends AbstractCurveFitter {
                 lmaData[1][i] = yData[start + i];
             }
 
-            lma = new LMA(function, data.getParams(), lmaData);
-
-    // System.out.println("INCOMING param0 " + lma.parameters[0] + ", param1 " + lma.parameters[1] + ", param2 " + lma.parameters[2]);
-
+            double inParams[] = data.getParams();
+            double params[] = new double[inParams.length - 1];
+            switch (getNumberComponents()) {
+                case 1:
+                    params[0] = inParams[2]; // A1
+                    params[1] = inParams[3]; // T1
+                    params[2] = inParams[1]; // C
+                    break;
+                case 2:
+                    params[0] = inParams[2]; // A1
+                    params[1] = inParams[3]; // T1
+                    params[2] = inParams[4]; // A2
+                    params[3] = inParams[5]; // T2
+                    params[4] = inParams[1]; // C
+                    break;
+                case 3:
+                    params[0] = inParams[2]; // A1
+                    params[1] = inParams[3]; // T1
+                    params[2] = inParams[4]; // A2
+                    params[3] = inParams[5]; // T2
+                    params[4] = inParams[6]; // A3
+                    params[5] = inParams[7]; // T3
+                    params[6] = inParams[1]; // C
+                    break;
+            }
+            lma = new LMA(function, params, lmaData);
 
             try {
                 lma.fit();
@@ -107,25 +112,37 @@ public class JaolhoCurveFitter extends AbstractCurveFitter {
                 success = false;
                 System.out.println("exception " + e);
             }
-
-            //if (lma.parameters[1] > 0.0f && lma.parameters[1] < 100.0f && lma.parameters[1] != 1.0f) {
-            //    System.out.println("chi2: " + lma.chi2 + ", param0: " + lma.parameters[0] + ", param1: " + lma.parameters[1] + ", param2: " + lma.parameters[2]);
-            //}
-
-            //if (false && success) {
-            //    System.out.println("iterations: " + lma.iterationCount);
-            //    System.out.println("chi2: " + lma.chi2 + ", param0: " + lma.parameters[0] + ", param1: " + lma.parameters[1] + ", param2: " + lma.parameters[2]);
-            //}
-
             for (int i = 0; i < length; ++i) {
                 data.getYFitted()[start + i] = function.getY(lmaData[0][i], lma.parameters);
             }
-            for (int i = 0; i < data.getParams().length; ++i) {
-                data.getParams()[i] = lma.parameters[i];
+            double outParams[] = data.getParams();
+            switch (getNumberComponents()) {
+                case 1:
+                    outParams[0] = lma.chi2;
+                    outParams[1] = params[2]; // C
+                    outParams[2] = params[0]; // A1
+                    outParams[3] = params[1]; // T1
+                    break;
+                case 2:
+                    outParams[0] = lma.chi2;
+                    outParams[1] = params[4]; // C
+                    outParams[2] = params[0]; // A1
+                    outParams[3] = params[1]; // T1
+                    outParams[4] = params[2]; // A2
+                    outParams[5] = params[3]; // T2
+                    break;
+                case 3:
+                    outParams[0] = lma.chi2;
+                    outParams[1] = params[6]; // C
+                    outParams[2] = params[0]; // A1
+                    outParams[3] = params[1]; // T1
+                    outParams[4] = params[2]; // A2
+                    outParams[5] = params[3]; // T2
+                    outParams[6] = params[4]; // A3
+                    outParams[7] = params[5]; // T3
+                    break;
             }
-            data.setChiSquare(lma.chi2);
         }
-        //System.out.println("goodPixels " + goodPixels + " badPixels " + badPixels);
         //TODO error return deserves more thought
         return 0;
     }
