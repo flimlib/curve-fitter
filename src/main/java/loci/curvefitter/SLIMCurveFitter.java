@@ -40,6 +40,8 @@ import com.sun.jna.Library;
 import com.sun.jna.Native;
 import com.sun.jna.Platform;
 
+import imagej.nativelibrary.NativeLibraryUtil;
+
 /**
  * TODO
  *
@@ -138,6 +140,9 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
         int returnValue = 0;
         if (null == s_library) {
             try {
+                // extract to library path
+                System.out.println("extract native library returns " + NativeLibraryUtil.extractNativeLibraryToPath(this.getClass(), "SLIMCurve-2.0-SNAPSHOT"));
+                
                 // load once, on-demand
                 s_library = (CLibrary) Native.loadLibrary("SLIMCurve", CLibrary.class);
                 System.out.println("s_library is " + s_library);
