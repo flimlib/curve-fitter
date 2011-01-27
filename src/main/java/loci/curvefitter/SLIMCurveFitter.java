@@ -141,10 +141,14 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
         if (null == s_library) {
             try {
                 // extract to library path
-                System.out.println("extract native library returns " + NativeLibraryUtil.extractNativeLibraryToPath(this.getClass(), "SLIMCurve-2.0-SNAPSHOT"));
-                
+                //TODO sort out the nameSystem.out.println("extract native library returns " + NativeLibraryUtil.extractNativeLibraryToPath(this.getClass(), "SLIMCurve-2.0-SNAPSHOT"));
+                System.out.println("extract native library returns " + NativeLibraryUtil.extractNativeLibraryToPath(this.getClass(), "slim-curve-1.0-SNAPSHOT"));
+
                 // load once, on-demand
-                s_library = (CLibrary) Native.loadLibrary("SLIMCurve", CLibrary.class);
+                //TODO sort out the name s_library = (CLibrary) Native.loadLibrary("SLIMCurve", CLibrary.class);
+               //TODO test with old code instead: s_library = (CLibrary) Native.loadLibrary("slim-curve-1.0-SNAPSHOT", CLibrary.class);
+                s_library = (CLibrary) Native.loadLibrary("SLIMCurve_trimmed_down", CLibrary.class);
+
                 System.out.println("s_library is " + s_library);
             }
             catch (UnsatisfiedLinkError e) {
