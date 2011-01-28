@@ -139,6 +139,8 @@ public class GrayNRCurveFitter extends AbstractCurveFitter {
             try {
                 // load once, on-demand
                 s_library = (CLibrary) Native.loadLibrary("GrayNRCode", CLibrary.class);
+
+                System.out.println("s_library is " + s_library);
             }
             catch (UnsatisfiedLinkError e) {
                 System.out.println("unable to load dynamic library " + e.getMessage());
@@ -169,9 +171,9 @@ public class GrayNRCurveFitter extends AbstractCurveFitter {
 
             for (ICurveFitData data: dataArray) {
                 // grab incoming parameters
-                a.setValue(data.getParams()[0]);
-                tau.setValue(data.getParams()[1]);
-                z.setValue(data.getParams()[2]);
+                a.setValue(data.getParams()[2]);
+                tau.setValue(data.getParams()[3]);
+                z.setValue(data.getParams()[1]);
 
                 returnValue = s_library.RLD_fit(
                         m_xInc,
@@ -190,9 +192,11 @@ public class GrayNRCurveFitter extends AbstractCurveFitter {
                         );
 
                 // set outgoing parameters
-                data.getParams()[0] = a.getValue();
-                data.getParams()[1] = tau.getValue();
-                data.getParams()[2] = z.getValue();
+                data.getParams()[0] = chiSquare.getValue();
+                data.getParams()[1] = z.getValue();
+                data.getParams()[2] = a.getValue();
+                data.getParams()[3] = tau.getValue();
+
             }
         }
         else {
@@ -208,7 +212,7 @@ public class GrayNRCurveFitter extends AbstractCurveFitter {
                         sig,
                         data.getParams(),
                         toIntArray(m_free),
-                        data.getParams().length,
+                        data.getParams().length - 1,
                         data.getYFitted(),
                         chiSquare,
                         chiSquareTarget

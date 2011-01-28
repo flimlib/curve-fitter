@@ -147,7 +147,8 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                 // load once, on-demand
                 //TODO sort out the name s_library = (CLibrary) Native.loadLibrary("SLIMCurve", CLibrary.class);
                //TODO test with old code instead: s_library = (CLibrary) Native.loadLibrary("slim-curve-1.0-SNAPSHOT", CLibrary.class);
-                s_library = (CLibrary) Native.loadLibrary("SLIMCurve_trimmed_down", CLibrary.class);
+                //TODO this was yet another version s_library = (CLibrary) Native.loadLibrary("SLIMCurve_trimmed_down", CLibrary.class);
+                s_library = (CLibrary) Native.loadLibrary("slim-curve-1.0-SNAPSHOT", CLibrary.class);
 
                 System.out.println("s_library is " + s_library);
             }
