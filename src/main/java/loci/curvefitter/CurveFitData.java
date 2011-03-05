@@ -55,128 +55,88 @@ public class CurveFitData implements ICurveFitData {
     double m_chiSquare;
     Object m_userData;
 
-    /**
-     * @inheritDoc
-     */
+    @Override
     public int getChannel() {
         return m_channel;
     }
 
-    /**
-     * @inheritDoc
-     */
+    @Override
     public void setChannel(int channel) {
         m_channel = channel;
     }
 
-    /**
-     * @inheritDoc
-     */
+    @Override
     public int getX() {
         return m_x;
     }
 
-    /**
-     * @inheritDoc
-     */
+    @Override
     public void setX(int x) {
         m_x = x;
     }
 
-    /**
-     * @inheritDoc
-     */
+    @Override
     public int getY() {
         return m_y;
     }
 
-    /**
-     * @inheritDoc
-     */
+    @Override
     public void setY(int y) {
         m_y = y;
     }
 
-    /**
-     * @inheritDoc
-     */
+    @Override
     public double[] getParams() {
         return m_params;
     }
 
-    /**
-     * @inheritDoc
-     */
+    @Override
     public void setParams(double[] params) {
         m_params = params;
     }
 
-    /**
-     * @inheritDoc
-     */
     public boolean[] getFree() {
         return m_free;
     }
 
-    /**
-     * @inheritDoc
-     */
     public void setFree(boolean[] free) {
         m_free = free;
     }
 
-    /**
-     * @inheritDoc
-     */
+    @Override
     public double[] getYCount() {
         return m_yCount;
     }
 
-    /**
-     * @inheritDoc
-     */
+    @Override
     public void setYCount(double yCount[]) {
         m_yCount = yCount;
     }
 
-    /**
-     * @inheritDoc
-     */
+    @Override
     public double[] getSig() {
         return m_sig;
     }
 
-    /**
-     * @inheritDoc
-     */
+    @Override
     public void setSig(double sig[]) {
         m_sig = sig;
     }
 
-    /**
-     * @inheritDoc
-     */
+    @Override
     public double[] getYFitted() {
         return m_yFitted;
     }
 
-    /**
-     * @inheritDoc
-     */
+    @Override
     public void setYFitted(double yFitted[]) {
         m_yFitted = yFitted;
     }
 
-    /**
-     * @inheritDoc
-     */
     public double getChiSquare() {
         return m_chiSquare;
     }
 
-    /**
-     * @inheritDoc
-     */
     public void setChiSquare(double chiSquare) {
         m_chiSquare = chiSquare;
     }

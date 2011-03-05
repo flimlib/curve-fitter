@@ -46,23 +46,17 @@ public abstract class AbstractCurveFitter implements ICurveFitter {
     boolean[] m_free;
     double[] m_instrumentResponse;
     
-    /**
-     * @inheritDoc
-     */
+    @Override
     public FitFunction getFitFunction() {
         return m_fitFunction;
     }
     
-    /**
-     * @inheritDoc
-     */
+    @Override
     public void setFitFunction(FitFunction function) {
         m_fitFunction = function;
     }
 
-    /**
-     * @inheritDoc
-     */
+    @Override
     public int getNumberComponents() {
         int number = 0;
         if (null != m_fitFunction) {
@@ -72,59 +66,43 @@ public abstract class AbstractCurveFitter implements ICurveFitter {
         return number;
     }
 
-    /**
-     * @inheritDoc
-     */
+    @Override
     public double getXInc() {
         return m_xInc;
     }
 
-    /**
-     * @inheritDoc
-     */
+    @Override
     public void setXInc(double xInc) {
         m_xInc = xInc;
     }
 
-    /**
-     * @inheritDoc
-     */
+    @Override
     public boolean[] getFree() {
         return m_free;
     }
 
-    /**
-     * @inheritDoc
-     */
+    @Override
     public void setFree(boolean[] free) {
         m_free = free;
     }
 
-    /**
-     * @inheritDoc
-     */
+    @Override
     public double[] getInstrumentResponse() {
         return m_instrumentResponse;
     }
 
-    /**
-     * @inheritDoc
-     */
+    @Override
     public void setInstrumentResponse(double response[]) {
         m_instrumentResponse = response;
     }
 
-    /**
-     * @inheritDoc
-     */
-     public int fitData(ICurveFitData[] data) {
+    @Override
+    public int fitData(ICurveFitData[] data) {
         int nData = data[0].getYCount().length;
         return fitData(data, 0, nData - 1);
     }
 
-    /**
-     * @inheritDoc
-     */
-    abstract public int fitData(ICurveFitData[] data, int start, int stop);
+    @Override
+    public abstract int fitData(ICurveFitData[] data, int start, int stop);
 }
 

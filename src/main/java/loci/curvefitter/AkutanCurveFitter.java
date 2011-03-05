@@ -34,8 +34,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package loci.curvefitter;
 
-import cern.colt.matrix.DoubleFactory1D;
-import cern.colt.matrix.DoubleFactory2D;
 import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.DoubleMatrix2D;
 import cern.colt.matrix.impl.DenseDoubleMatrix1D;
@@ -55,9 +53,7 @@ import org.akutan.optimization.LMSolver;
  */
 public class AkutanCurveFitter extends AbstractCurveFitter {
 
-    /**
-     * @inheritDoc
-     */
+    @Override
     public int fitData(ICurveFitData[] dataArray, int start, int stop) {
         int length = stop - start + 1;
         DoubleMatrix1D x = new DenseDoubleMatrix1D(length);
@@ -87,11 +83,11 @@ public class AkutanCurveFitter extends AbstractCurveFitter {
             double params[] = data.getParams();
             int paramsLength = params.length;
             for (int i = 0; i <  paramsLength; ++i) {
-                params[i] = (double) solution.get(i);
+                params[i] = solution.get(i);
             }
             double yFittedX[] = data.getYFitted(); //TODO better name; was 'yFitted', collided with 'yFitted', formerly 'm_yFitted'
             for (int i = 0; i < length; ++i) {
-                yFittedX[start + i] = (double) yFitted.get(i);
+                yFittedX[start + i] = yFitted.get(i);
             }
         }
         return 0;
@@ -132,6 +128,7 @@ public class AkutanCurveFitter extends AbstractCurveFitter {
          *
          * @param a parameters of the fit
          */
+        @Override
         public double value(DoubleMatrix1D a) {
 
             if (0 > --m_countDown) {
@@ -175,9 +172,10 @@ public class AkutanCurveFitter extends AbstractCurveFitter {
          * Computes the gradient of the function for parameters a.<p>
          * Must be called after 'value()'.
          *
-         * @param x
+         * @param a
          * @return gradient
          */
+        @Override
         public DoubleMatrix1D gradient(DoubleMatrix1D a) {
             DoubleMatrix1D g = new DenseDoubleMatrix1D(a.size());
             double betaSum;
@@ -201,6 +199,7 @@ public class AkutanCurveFitter extends AbstractCurveFitter {
          * @param a
          * @return hessian
          */
+        @Override
         public DoubleMatrix2D hessian(DoubleMatrix1D a) {
             DoubleMatrix2D H = new DenseDoubleMatrix2D(a.size(), a.size());
             for (int j = 0; j < a.size(); ++j) {

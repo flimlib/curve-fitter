@@ -44,108 +44,103 @@ import jaolho.data.lma.LMAFunction;
  */
 public class JaolhoCurveFitter extends AbstractCurveFitter {
 
-    /**
-     * @inheritDoc
-     */
-    public int fitData(ICurveFitData[] dataArray, int start, int stop) {
-        boolean success;
-        int goodPixels = 0;
-        int badPixels = 0;
-        double[][] lmaData;
-        LMAFunction function;
-        LMA lma;
-        
-        int length = stop - start + 1;
-        lmaData = new double[2][length];
-        double x_value = start * m_xInc;
-        for (int i = 0; i < length; ++i) {
-            lmaData[0][i] = x_value;
-            x_value += m_xInc;
-        }
+  @Override
+  public int fitData(ICurveFitData[] dataArray, int start, int stop) {
+    int goodPixels = 0;
+    int badPixels = 0;
+    double[][] lmaData;
+    LMAFunction function;
+    LMA lma;
 
-        if (ICurveFitter.FitFunction.STRETCHED_EXPONENTIAL.equals(getFitFunction())) {
-            System.out.println("Stretched exponentials not supported in Jaolho at this time.");
-            return 0;
-        }
-        function = new ExpFunction(getNumberComponents());
-
-        for (ICurveFitData data: dataArray) {
-            double yData[] = data.getYCount();
-            for (int i = 0; i < length; ++i) {
-                lmaData[1][i] = yData[start + i];
-            }
-
-            double inParams[] = data.getParams();
-            double params[] = new double[inParams.length - 1];
-            switch (getNumberComponents()) {
-                case 1:
-                    params[0] = inParams[2]; // A1
-                    params[1] = inParams[3]; // T1
-                    params[2] = inParams[1]; // C
-                    break;
-                case 2:
-                    params[0] = inParams[2]; // A1
-                    params[1] = inParams[3]; // T1
-                    params[2] = inParams[4]; // A2
-                    params[3] = inParams[5]; // T2
-                    params[4] = inParams[1]; // C
-                    break;
-                case 3:
-                    params[0] = inParams[2]; // A1
-                    params[1] = inParams[3]; // T1
-                    params[2] = inParams[4]; // A2
-                    params[3] = inParams[5]; // T2
-                    params[4] = inParams[6]; // A3
-                    params[5] = inParams[7]; // T3
-                    params[6] = inParams[1]; // C
-                    break;
-            }
-            lma = new LMA(function, params, lmaData);
-
-            try {
-                lma.fit();
-                ++goodPixels;
-                success = true;
-            }
-            catch (Exception e) {
-                ++badPixels;
-                success = false;
-                System.out.println("exception " + e);
-            }
-            for (int i = 0; i < length; ++i) {
-                data.getYFitted()[start + i] = function.getY(lmaData[0][i], lma.parameters);
-            }
-            double outParams[] = data.getParams();
-            switch (getNumberComponents()) {
-                case 1:
-                    outParams[0] = lma.chi2;
-                    outParams[1] = params[2]; // C
-                    outParams[2] = params[0]; // A1
-                    outParams[3] = params[1]; // T1
-                    break;
-                case 2:
-                    outParams[0] = lma.chi2;
-                    outParams[1] = params[4]; // C
-                    outParams[2] = params[0]; // A1
-                    outParams[3] = params[1]; // T1
-                    outParams[4] = params[2]; // A2
-                    outParams[5] = params[3]; // T2
-                    break;
-                case 3:
-                    outParams[0] = lma.chi2;
-                    outParams[1] = params[6]; // C
-                    outParams[2] = params[0]; // A1
-                    outParams[3] = params[1]; // T1
-                    outParams[4] = params[2]; // A2
-                    outParams[5] = params[3]; // T2
-                    outParams[6] = params[4]; // A3
-                    outParams[7] = params[5]; // T3
-                    break;
-            }
-        }
-        //TODO error return deserves more thought
-        return 0;
+    int length = stop - start + 1;
+    lmaData = new double[2][length];
+    double x_value = start * m_xInc;
+    for (int i = 0; i < length; ++i) {
+      lmaData[0][i] = x_value;
+      x_value += m_xInc;
     }
+
+    if (ICurveFitter.FitFunction.STRETCHED_EXPONENTIAL.equals(getFitFunction())) {
+      System.out.println("Stretched exponentials not supported in Jaolho at this time.");
+      return 0;
+    }
+    function = new ExpFunction(getNumberComponents());
+
+    for (ICurveFitData data: dataArray) {
+      double yData[] = data.getYCount();
+      for (int i = 0; i < length; ++i) {
+        lmaData[1][i] = yData[start + i];
+      }
+
+      double inParams[] = data.getParams();
+      double params[] = new double[inParams.length - 1];
+      switch (getNumberComponents()) {
+        case 1:
+          params[0] = inParams[2]; // A1
+          params[1] = inParams[3]; // T1
+          params[2] = inParams[1]; // C
+          break;
+        case 2:
+          params[0] = inParams[2]; // A1
+          params[1] = inParams[3]; // T1
+          params[2] = inParams[4]; // A2
+          params[3] = inParams[5]; // T2
+          params[4] = inParams[1]; // C
+          break;
+        case 3:
+          params[0] = inParams[2]; // A1
+          params[1] = inParams[3]; // T1
+          params[2] = inParams[4]; // A2
+          params[3] = inParams[5]; // T2
+          params[4] = inParams[6]; // A3
+          params[5] = inParams[7]; // T3
+          params[6] = inParams[1]; // C
+          break;
+      }
+      lma = new LMA(function, params, lmaData);
+
+      try {
+        lma.fit();
+        ++goodPixels;
+      }
+      catch (Exception e) {
+        ++badPixels;
+        System.out.println("exception " + e);
+      }
+      for (int i = 0; i < length; ++i) {
+        data.getYFitted()[start + i] = function.getY(lmaData[0][i], lma.parameters);
+      }
+      double outParams[] = data.getParams();
+      switch (getNumberComponents()) {
+        case 1:
+          outParams[0] = lma.chi2;
+          outParams[1] = params[2]; // C
+          outParams[2] = params[0]; // A1
+          outParams[3] = params[1]; // T1
+          break;
+        case 2:
+          outParams[0] = lma.chi2;
+          outParams[1] = params[4]; // C
+          outParams[2] = params[0]; // A1
+          outParams[3] = params[1]; // T1
+          outParams[4] = params[2]; // A2
+          outParams[5] = params[3]; // T2
+          break;
+        case 3:
+          outParams[0] = lma.chi2;
+          outParams[1] = params[6]; // C
+          outParams[2] = params[0]; // A1
+          outParams[3] = params[1]; // T1
+          outParams[4] = params[2]; // A2
+          outParams[5] = params[3]; // T2
+          outParams[6] = params[4]; // A3
+          outParams[7] = params[5]; // T3
+          break;
+      }
+    }
+    //TODO error return deserves more thought
+    return 0;
+  }
 
   /**
    * A summed exponential function of the form:
@@ -161,6 +156,7 @@ public class JaolhoCurveFitter extends AbstractCurveFitter {
     /** Constructs a function with the given number of summed exponentials. */
     public ExpFunction(int num) { numExp = num; }
 
+    @Override
     public double getY(double x, double[] a) {
       double sum = 0;
       //System.out.println("numExp is " + numExp);
@@ -175,6 +171,7 @@ public class JaolhoCurveFitter extends AbstractCurveFitter {
       return sum;
     }
 
+    @Override
     public double getPartialDerivate(double x, double[] a, int parameterIndex) {
       if (parameterIndex == 2 * numExp) return 1; // c term
       int e = parameterIndex / 2;
@@ -191,5 +188,5 @@ public class JaolhoCurveFitter extends AbstractCurveFitter {
         parameterIndex);
     }
   }
-    
+
 }

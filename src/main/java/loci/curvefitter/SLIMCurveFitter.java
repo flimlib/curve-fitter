@@ -34,11 +34,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package loci.curvefitter;
 
-import com.sun.jna.ptr.DoubleByReference;
-import com.sun.jna.ptr.FloatByReference;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
-import com.sun.jna.Platform;
+import com.sun.jna.ptr.DoubleByReference;
 
 import imagej.nativelibrary.NativeLibraryUtil;
 
@@ -53,7 +51,7 @@ import imagej.nativelibrary.NativeLibraryUtil;
  */
 public class SLIMCurveFitter extends AbstractCurveFitter {
     static CLibrary s_library;
-    public enum AlgorithmType { RLD, LMA };
+    public enum AlgorithmType { RLD, LMA }
     private AlgorithmType m_algorithmType;
 
     public interface CLibrary extends Library {
@@ -133,9 +131,7 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
     }
 
 
-    /**
-     * @inheritDoc
-     */
+    @Override
     public int fitData(ICurveFitData[] dataArray, int start, int stop) {
         int returnValue = 0;
         if (null == s_library) {

@@ -34,11 +34,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package loci.curvefitter;
 
-import com.sun.jna.ptr.DoubleByReference;
-import com.sun.jna.ptr.FloatByReference;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
-import com.sun.jna.Platform;
+import com.sun.jna.ptr.DoubleByReference;
 
 /**
  * TODO
@@ -130,9 +128,7 @@ public class GrayNRCurveFitter extends AbstractCurveFitter {
     }
 
 
-    /**
-     * @inheritDoc
-     */
+    @Override
     public int fitData(ICurveFitData[] dataArray, int start, int stop) {
         int returnValue = 0;
         if (null == s_library) {
@@ -160,7 +156,7 @@ public class GrayNRCurveFitter extends AbstractCurveFitter {
         
         double sig[] = new double[stop+1];
         for (int i = 0; i < sig.length; ++i) {
-        	sig[i] = 1.0; // basically ignoring sig for now
+            sig[i] = 1.0; // basically ignoring sig for now
         }
 
         if (0 == m_algType) { //TODO crude; use enums

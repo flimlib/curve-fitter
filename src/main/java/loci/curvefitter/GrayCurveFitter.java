@@ -34,10 +34,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package loci.curvefitter;
 
-import com.sun.jna.ptr.FloatByReference;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
-import com.sun.jna.Platform;
+import com.sun.jna.ptr.FloatByReference;
 
 /**
  * TODO
@@ -89,13 +88,9 @@ public class GrayCurveFitter extends AbstractCurveFitter {
         m_algType = 0;
     }
 
-
-    /**
-     * @inheritDoc
-     */
+    @Override
     public int fitData(ICurveFitData[] dataArray, int start, int stop) {
-
- 	CLibrary lib = (CLibrary) Native.loadLibrary("GrayCode", CLibrary.class);
+        CLibrary lib = (CLibrary) Native.loadLibrary("GrayCode", CLibrary.class);
 
         //TODO ARG since initial x = fit_start * xincr we have to supply the unused portion of y[] before fit_start.
         // if this data were already premassaged it might be better to get rid of fit_start & _end, just give the
@@ -120,10 +115,6 @@ public class GrayCurveFitter extends AbstractCurveFitter {
             float residuals[] = new float[stop+1];
             FloatByReference chiSq = new FloatByReference();
             float chiSqTarget = 1.0f; //TODO note 'chiSqTarget' is internally known as 'division'!!!!
-
-            boolean success;
-            int goodPixels = 0;
-            int badPixels = 0;
 
            // double[][] lmaData;
 
@@ -159,9 +150,9 @@ public class GrayCurveFitter extends AbstractCurveFitter {
                                                                            chiSq, chiSqTarget);
 //System.out.println("returnValue " + returnValue + " z " + z.getValue() + " a " + a.getValue() + " tau " + tau.getValue() + " chiSq " + chiSq.getValue());
                 //data.setYFitted();
-                params[0] = (double) a.getValue();
-                params[1] = 1.0 / ((double) tau.getValue()); // convert tau to lambda
-                params[2] = (double) z.getValue();
+                params[0] = a.getValue();
+                params[1] = 1.0 / tau.getValue(); // convert tau to lambda
+                params[2] = z.getValue();
                 data.setParams(params);
             }
         }
@@ -183,10 +174,6 @@ public class GrayCurveFitter extends AbstractCurveFitter {
             float residuals[] = new float[stop+1];
             FloatByReference chiSq = new FloatByReference();
             float chiSqTarget = 1.0f; //TODO note 'chiSqTarget' is internally known as 'division'!!!!
-
-            boolean success;
-            int goodPixels = 0;
-            int badPixels = 0;
 
            // double[][] lmaData;
 //
