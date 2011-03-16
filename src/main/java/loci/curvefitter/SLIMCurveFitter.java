@@ -51,7 +51,7 @@ import imagej.nativelibrary.NativeLibraryUtil;
  */
 public class SLIMCurveFitter extends AbstractCurveFitter {
     static CLibrary s_library;
-    public enum AlgorithmType { RLD, LMA }
+    public enum AlgorithmType { RLD, LMA, RLD_LMA };
     private AlgorithmType m_algorithmType;
 
     public interface CLibrary extends Library {
@@ -164,7 +164,7 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
         DoubleByReference chiSquare = new DoubleByReference();
         double chiSquareTarget = 1.0; //TODO s/b specified incoming
 
-        if (AlgorithmType.RLD.equals(m_algorithmType)) {
+        if (AlgorithmType.RLD.equals(m_algorithmType) || AlgorithmType.RLD_LMA.equals(m_algorithmType)) {
             // RLD or triple integral fit
             DoubleByReference z = new DoubleByReference();
             DoubleByReference a = new DoubleByReference();
@@ -203,13 +203,15 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                 data.getParams()[3] = tau.getValue();
             }
         }
-        else {
+
+        if (AlgorithmType.LMA.equals(m_algorithmType) || AlgorithmType.RLD_LMA.equals(m_algorithmType)) {
             // LMA fit
             for (ICurveFitData data: dataArray) {
                 int nInstrumentResponse = 0;
                 if (null != m_instrumentResponse) {
                     nInstrumentResponse = m_instrumentResponse.length;
                 }
+                double[] params = new double[data.getParams().length];
                 returnValue = s_library.LMA_fit(
                         m_xInc,
                         data.getYCount(),
@@ -227,7 +229,7 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                         );
             }
         }
-        //TODO error return deserves more thought
+        //TODO error return deserves much more thought!!  Just returning the last value here!!
         return returnValue;
     }
 
