@@ -38,7 +38,6 @@ package loci.curvefitter;
  * Abstract base class for curve fitters.
  *
  * @author Aivar Grislis
- *
  */
 public abstract class AbstractCurveFitter implements ICurveFitter {
     FitFunction m_fitFunction;
