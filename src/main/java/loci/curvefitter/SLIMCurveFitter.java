@@ -161,6 +161,15 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
         // portion to be fitted and specify an initial x.
         //TODO ARG August use initial X of 0.
 
+        boolean[] free = m_free.clone();
+        if (AlgorithmType.RLD.equals(m_algorithmType)) {
+            // pure RLD (versus RLD followed by LMA) has no way to fix
+            // parameters
+            for (int i = 0; i < free.length; ++i) {
+                free[i] = true;
+            }
+        }
+
         DoubleByReference chiSquare = new DoubleByReference();
         double chiSquareTarget = 1.0; //TODO s/b specified incoming
 
@@ -196,11 +205,17 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                         chiSquare,
                         chiSquareTarget
                         );
-               // set outgoing parameters
+                // set outgoing parameters, unless they are fixed
                 data.getParams()[0] = chiSquare.getValue();
-                data.getParams()[1] = z.getValue();
-                data.getParams()[2] = a.getValue();
-                data.getParams()[3] = tau.getValue();
+                if (free[0]) {
+                    data.getParams()[1] = z.getValue();
+                }
+                if (free[1]) {
+                    data.getParams()[2] = a.getValue();
+                }
+                if (free[2]) {
+                    data.getParams()[3] = tau.getValue();
+                }
             }
         }
 
@@ -211,7 +226,11 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                 if (null != m_instrumentResponse) {
                     nInstrumentResponse = m_instrumentResponse.length;
                 }
-                double[] params = new double[data.getParams().length];
+                for (int i = 0; i < m_free.length; ++i) {
+                    if (!m_free[i]) {
+                        System.out.println("fix " + i + " at " + data.getParams()[i]);
+                    }
+                }
                 returnValue = s_library.LMA_fit(
                         m_xInc,
                         data.getYCount(),
@@ -227,6 +246,11 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                         chiSquare,
                         chiSquareTarget
                         );
+                for (int i = 0; i < m_free.length; ++i) {
+                    if (!m_free[i]) {
+                        System.out.println("fixed " + i + " result " + data.getParams()[i]);
+                    }
+                }
             }
         }
         //TODO error return deserves much more thought!!  Just returning the last value here!!
