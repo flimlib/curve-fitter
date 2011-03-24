@@ -48,7 +48,6 @@ public class CurveFitData implements ICurveFitData {
     int m_x;
     int m_y;
     double[] m_params;
-    boolean[] m_free;
     double[] m_yCount;
     double[] m_sig;
     double[] m_yFitted;
@@ -93,14 +92,6 @@ public class CurveFitData implements ICurveFitData {
     @Override
     public void setParams(double[] params) {
         m_params = params;
-    }
-
-    public boolean[] getFree() {
-        return m_free;
-    }
-
-    public void setFree(boolean[] free) {
-        m_free = free;
     }
 
     @Override
