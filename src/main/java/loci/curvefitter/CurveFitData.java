@@ -47,6 +47,7 @@ public class CurveFitData implements ICurveFitData {
     int m_channel;
     int m_x;
     int m_y;
+    int m_pixels;
     double[] m_params;
     double[] m_yCount;
     double[] m_sig;
@@ -82,6 +83,16 @@ public class CurveFitData implements ICurveFitData {
     @Override
     public void setY(int y) {
         m_y = y;
+    }
+
+    @Override
+    public int getPixels() {
+        return m_pixels;
+    }
+
+    @Override
+    public void setPixels(int pixels) {
+        m_pixels = pixels;
     }
 
     @Override

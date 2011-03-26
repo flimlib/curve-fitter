@@ -87,6 +87,20 @@ public interface ICurveFitData {
     public void setY(int y);
 
     /**
+     * Sets how many pixels went into this data point.
+     *
+     * @param pixels
+     */
+    public void setPixels(int pixels);
+
+    /**
+     * Gets how many pixels went into this data point.
+     *
+     * @return number of pixels
+     */
+    public int getPixels();
+
+    /**
      * Gets parameters of the fit.  Could represent multiple components.
      * Input and output to the fit.
      *
@@ -143,18 +157,4 @@ public interface ICurveFitData {
      * @param yFit array of fitted data
      */
     public void setYFitted(double yFit[]);
-
-    /**
-     * Gets chi square of fit.  Output from fit only.
-     *
-     * @return chi square
-     */
-   // public double getChiSquare();
-
-    /**
-     * Sets chi square of fit.
-     *
-     * @param chiSquare
-     */
-   // public void setChiSquare(double chiSquare);
 }

@@ -103,9 +103,10 @@ public interface ICurveFitter {
     /**
      * Get instrument response data.  Input to fit only.
      *
+     * @param scale to this number of pixels
      * @return array of data or null if not set
      */
-    public double[] getInstrumentResponse();
+    public double[] getInstrumentResponse(int pixels);
 
     /**
      * Set instrument response data.  Input to fit only.

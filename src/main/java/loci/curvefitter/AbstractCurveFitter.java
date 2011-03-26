@@ -86,8 +86,15 @@ public abstract class AbstractCurveFitter implements ICurveFitter {
     }
 
     @Override
-    public double[] getInstrumentResponse() {
-        return m_instrumentResponse;
+    public double[] getInstrumentResponse(int pixels) {
+        double[] instrumentResponse = null;
+        if (null != m_instrumentResponse) {
+            instrumentResponse = new double[m_instrumentResponse.length];
+            for (int i = 0; i < instrumentResponse.length; ++i) {
+                instrumentResponse[i] = pixels * m_instrumentResponse[i];
+            }
+        }
+        return instrumentResponse;
     }
 
     @Override

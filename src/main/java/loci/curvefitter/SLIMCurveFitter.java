@@ -185,17 +185,19 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                 tau.setValue(data.getParams()[3]);
                 z.setValue(  data.getParams()[1]);
 
+                // get IRF curve, if any
+                double[] instrumentResponse = getInstrumentResponse(data.getPixels());
                 int nInstrumentResponse = 0;
-                if (null != m_instrumentResponse) {
-                    nInstrumentResponse = m_instrumentResponse.length;
+                if (null != instrumentResponse) {
+                    nInstrumentResponse = instrumentResponse.length;
                 }
 
                 returnValue = s_library.RLD_fit(
                         m_xInc,
-                        data.getYCount(), //TODO data get data???
+                        data.getYCount(),
                         start,
                         stop,
-                        m_instrumentResponse,
+                        instrumentResponse,
                         nInstrumentResponse,
                         data.getSig(),
                         z,
