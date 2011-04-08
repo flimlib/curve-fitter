@@ -38,6 +38,8 @@ import com.sun.jna.Library;
 import com.sun.jna.Native;
 import com.sun.jna.ptr.DoubleByReference;
 
+import ij.IJ;
+
 import imagej.nativelibrary.NativeLibraryUtil;
 
 /**
@@ -138,7 +140,12 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
             try {
                 // extract to library path
                 //TODO sort out the nameSystem.out.println("extract native library returns " + NativeLibraryUtil.extractNativeLibraryToPath(this.getClass(), "SLIMCurve-2.0-SNAPSHOT"));
-                System.out.println("extract native library returns " + NativeLibraryUtil.extractNativeLibraryToPath(this.getClass(), "slim-curve-1.0-SNAPSHOT"));
+                //System.out.println("extract native library returns " + NativeLibraryUtil.extractNativeLibraryToPath(this.getClass(), "slim-curve-1.0-SNAPSHOT"));
+                System.out.println("loadNativeLibrary returns " + NativeLibraryUtil.loadNativeLibrary(this.getClass(), "slim-curve"));
+
+                IJ.log("before System load library");
+                System.loadLibrary("slim-curve-1.0-SNAPSHOT");
+                IJ.log("after System load library");
 
                 // load once, on-demand
                 //TODO sort out the name s_library = (CLibrary) Native.loadLibrary("SLIMCurve", CLibrary.class);
@@ -149,6 +156,7 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                 System.out.println("s_library is " + s_library);
             }
             catch (UnsatisfiedLinkError e) {
+                IJ.log("unable to load dynamic library " + e.getMessage());
                 System.out.println("unable to load dynamic library " + e.getMessage());
                 return 0;
             }
@@ -228,11 +236,6 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                 if (null != m_instrumentResponse) {
                     nInstrumentResponse = m_instrumentResponse.length;
                 }
-                for (int i = 0; i < m_free.length; ++i) {
-                    if (!m_free[i]) {
-                        System.out.println("fix " + i + " at " + data.getParams()[i]);
-                    }
-                }
                 returnValue = s_library.LMA_fit(
                         m_xInc,
                         data.getYCount(),
@@ -248,11 +251,6 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                         chiSquare,
                         chiSquareTarget
                         );
-                for (int i = 0; i < m_free.length; ++i) {
-                    if (!m_free[i]) {
-                        System.out.println("fixed " + i + " result " + data.getParams()[i]);
-                    }
-                }
             }
         }
         //TODO error return deserves much more thought!!  Just returning the last value here!!
