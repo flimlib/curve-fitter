@@ -28,6 +28,11 @@
   <dependencies>
     <dependency>
       <groupId>${imagej.groupId}</groupId>
+      <artifactId>ij</artifactId>
+      <version>${imagej1.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${imagej.groupId}</groupId>
       <artifactId>native-library-util</artifactId>
       <version>${imagej.version}</version>
     </dependency>
