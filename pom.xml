@@ -63,73 +63,81 @@
       <artifactId>slim-curve</artifactId>
       <version>1.0-SNAPSHOT</version>
       <type>nar</type>
-      <!-- classifier>x86_64-MacOSX-gpp-jni</classifier -->
-      <!-- dont understandt this part anyway scope>test</scope -->
     </dependency>
   </dependencies>
 
-  <build>
-    <plugins>
-    
-      <!-- plugin>
-        <artifactId>maven-nar-plugin</artifactId>
-        <extensions>true</extensions>  what does this do?
-        <configuration>
-          <ignore>true</ignore>
-          <classifiers>
-            <classifier>x86-Windows-msvc-shared</classifier>
-            <classifier>x86_64-MacOSX-gpp-shared</classifier>
-            <classifier>i386-Linux-g++-shared</classifier>
-          </classifiers>
-          <libraries>
-            <library>
-              <type>shared</type>
-            </library>
-          </libraries>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>nar-download</goal>
-              <goal>nar-unpack</goal>
-              <goal>nar-assembly</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <configuration>
-          <descriptors>
-            <descriptor>
-              assembly-descriptor.xml
-            </descriptor>
-          </descriptors>
-        </configuration>
-        <executions>
-          <execution>
-            <id>make-assembly</id> this is used for inheritance merges
-            <phase>package</phase> bind to the packaging phase
-            <goals>
-              <goal>single</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin -->
-    
-
-      <plugin>
-        <artifactId>maven-jar-plugin</artifactId>
-        <configuration>
-          <archive>
-            <manifest>
-              <packageName>loci.curvefitter</packageName>
-            </manifest>
-          </archive>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+  <profiles>
+    <profile>
+      <id>default</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-jar-plugin</artifactId>
+            <configuration>
+              <archive>
+                <manifest>
+                  <packageName>loci.curvefitter</packageName>
+                </manifest>
+              </archive>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>with-libs</id>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-nar-plugin</artifactId>
+            <extensions>true</extensions>  <!-- what does this do? -->
+            <configuration>
+              <ignore>true</ignore>
+              <classifiers>
+                <classifier>x86-Windows-msvc-shared</classifier>
+                <classifier>x86_64-MacOSX-gpp-shared</classifier>
+                <classifier>i386-Linux-g++-shared</classifier>
+              </classifiers>
+              <libraries>
+                <library>
+                  <type>shared</type>
+                </library>
+              </libraries>
+            </configuration>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>nar-download</goal>
+                  <goal>nar-unpack</goal>
+                  <goal>nar-assembly</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <configuration>
+              <descriptors>
+                <descriptor>assembly-descriptor.xml</descriptor>
+              </descriptors>
+            </configuration>
+            <executions>
+              <execution>
+                <id>make-assembly</id> <!-- this is used for inheritance merges -->
+                <phase>package</phase>
+                <goals>
+                  <goal>single</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
   <developers>
     <developer>

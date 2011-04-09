@@ -144,7 +144,7 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                 System.out.println("loadNativeLibrary returns " + NativeLibraryUtil.loadNativeLibrary(this.getClass(), "slim-curve"));
 
                 IJ.log("before System load library");
-                System.loadLibrary("slim-curve-1.0-SNAPSHOT");
+               ////// System.loadLibrary("slim-curve-1.0-SNAPSHOT");
                 IJ.log("after System load library");
 
                 // load once, on-demand
