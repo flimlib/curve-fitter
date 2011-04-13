@@ -202,7 +202,6 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
     @Override
     public int fitData(ICurveFitData[] dataArray, int start, int stop) {
         int returnValue = 0;
-        IJ.log("SLIMCurveFitter.fitData " + m_algorithmType + " s_loaded " + s_libraryLoaded + " dataArray.length " + dataArray.length);
 
         // load the native library, if not already loaded
         if (!s_libraryLoaded) {
