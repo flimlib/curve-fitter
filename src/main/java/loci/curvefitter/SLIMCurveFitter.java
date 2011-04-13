@@ -45,7 +45,7 @@ import ij.IJ;
 import imagej.nativelibrary.NativeLibraryUtil;
 
 /**
- * TODO
+ * This class is a Java wrapper around the SLIMCurve fitting C code.
  *
  * <dl><dt><b>Source code:</b></dt>
  * <dd><a href="http://dev.loci.wisc.edu/trac/software/browser/trunk/projects/curve-fitter/src/main/java/loci/curvefitter/SLIMCurveFitter.java">Trac</a>,
@@ -54,15 +54,17 @@ import imagej.nativelibrary.NativeLibraryUtil;
  * @author Aivar Grislis grislis at wisc.edu
  */
 public class SLIMCurveFitter extends AbstractCurveFitter {
-    //TODO old style:
-    static CLibrary s_library;
-    boolean m_oldStyle = false;
-    //TODO
-    static boolean s_loaded = false;
     public enum AlgorithmType { RLD, LMA, RLD_LMA };
+
+    private static boolean s_libraryLoaded = false;
+    private static boolean s_libraryOnPath = false;
+    private static CLibrary s_library;
+
     private AlgorithmType m_algorithmType;
 
-    //TODO old style
+    /**
+     * This interface supports loading the library using JNA.
+     */
     public interface CLibrary extends Library {
 
         //TODO I'm omitting noise, s/b Poisson or Gaussian with lots of photons???
@@ -101,36 +103,27 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                            DoubleByReference chiSquare,
                            double chiSquareTarget
                            );
-
-
-        /* public int nr_GCI_triple_integral_fitting_engine(float xincr, float y[], int fitStart, int fitEnd,
-									   float instr[], int nInstr, int noise, float sig[],
-                                                                           FloatByReference z, FloatByReference a, FloatByReference tau,
-                                                                           float fitted[], float residuals[],
-                                                                           FloatByReference chiSq, float chiSqTarget);
-
-           public int nr_GCI_marquardt_fitting_engine(float xincr, float y[], int nData, int fitStart, int fitEnd,
-                                                                           float instr[], int nInstr, int noise, float sig[],
-                                                                           float param[], int paramFree[], int nParam,
-                                                                           int restrainType, int fitType,
-                                                                           float fitted[], float residuals[],
-                                                                           FloatByReference chiSq);*/
-        //,
-        //                                                                   float covar[], float alpha[], float errAxes[],
-        //                                                                   float chiSqTarget, int chiSqPercent);
-
-
-        /*public int nr_GCI_marquardt_fitting_engine(float xincr, float *trans, int ndata, int fit_start, int fit_end,
-								 float prompt[], int nprompt, //TODO ARG is this actually instr[] & ninstr?
-								 noise_type noise, float sig[],
-								 float param[], int paramfree[],
-								 int nparam, restrain_type restrain,
-								 fit_type fit, //TODO ARG void (*fitfunc)(float, float [], float *, float [], int),
-								 float *fitted, float *residuals, float *chisq,
-								 float **covar, float **alpha, float **erraxes,
-									float chisq_target, int chisq_percent) {*/
     }
-    //TODO
+
+
+    /**
+     * This supports calling the libray using JNI.
+     *
+     * @param xInc
+     * @param y
+     * @param fitStart
+     * @param fitEnd
+     * @param instr
+     * @param nInstr
+     * @param sig
+     * @param z
+     * @param a
+     * @param tau
+     * @param fitted
+     * @param chiSquare
+     * @param chiSquareTarget
+     * @return
+     */
 
 
     //TODO I'm omitting noise, s/b Poisson or Gaussian with lots of photons???
@@ -151,6 +144,24 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                            double chiSquareTarget
                            );
 
+    /**
+     * This supports calling the library using JNI.
+     *
+     * @param xInc
+     * @param y
+     * @param fitStart
+     * @param fitEnd
+     * @param instr
+     * @param n_instr
+     * @param sig
+     * @param param
+     * @param paramFree
+     * @param nParam
+     * @param fitted
+     * @param chiSquare
+     * @param chiSquareTarget
+     * @return
+     */
     //TODO I'm omitted noise, see above and restrainType and fitType, for now
     //TODO also covar, alpha, errAxes and chiSqPercent
     //TODO I'm omitting residuals[] aren't residuals = y 0 yFitted??? is there some weighting I'm missing that is time-consuming/impossible to recreate?
@@ -170,10 +181,19 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                            double chiSquareTarget
                            );
 
+    /**
+     * Create a curve fitter for a given algorithm type.
+     *
+     * @param algorithmType
+     */
     public SLIMCurveFitter(AlgorithmType algorithmType) {
         m_algorithmType = algorithmType;
     }
 
+    /**
+     * Create the default curve fitter, which uses RLD.
+     *
+     */
     public SLIMCurveFitter() {
         m_algorithmType = AlgorithmType.RLD;
     }
@@ -182,33 +202,35 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
     @Override
     public int fitData(ICurveFitData[] dataArray, int start, int stop) {
         int returnValue = 0;
-        IJ.log("SLIMCurveFitter.fitData " + m_algorithmType + " s_loaded " + s_loaded + " dataArray.length " + dataArray.length);
+        IJ.log("SLIMCurveFitter.fitData " + m_algorithmType + " s_loaded " + s_libraryLoaded + " dataArray.length " + dataArray.length);
 
-        //TODO old style:
-        if (m_oldStyle) {
-            
-       if (null == s_library) {
+        // load the native library, if not already loaded
+        if (!s_libraryLoaded) {
+
+            // look for library on path
             try {
-                // extract to library path
-                //TODO sort out the nameSystem.out.println("extract native library returns " + NativeLibraryUtil.extractNativeLibraryToPath(this.getClass(), "SLIMCurve-2.0-SNAPSHOT"));
-                //System.out.println("extract native library returns " + NativeLibraryUtil.extractNativeLibraryToPath(this.getClass(), "slim-curve-1.0-SNAPSHOT"));
-                System.out.println("loadNativeLibrary returns " + NativeLibraryUtil.loadNativeLibrary(this.getClass(), "slim-curve"));
-
-                IJ.log("before System load library");
-               ////// System.loadLibrary("slim-curve-1.0-SNAPSHOT");
-                IJ.log("after System load library");
-
-                // load once, on-demand
-                //TODO sort out the name s_library = (CLibrary) Native.loadLibrary("SLIMCurve", CLibrary.class);
-               //TODO test with old code instead: s_library = (CLibrary) Native.loadLibrary("slim-curve-1.0-SNAPSHOT", CLibrary.class);
-                //TODO this was yet another version s_library = (CLibrary) Native.loadLibrary("SLIMCurve_trimmed_down", CLibrary.class);
+                // use JNA
                 s_library = (CLibrary) Native.loadLibrary("slim-curve-1.0-SNAPSHOT", CLibrary.class);
+                s_libraryLoaded = true;
+                s_libraryOnPath = true;
 
-                System.out.println("s_library is " + s_library);
+                IJ.log("load library from library path, use JNA");
             }
             catch (UnsatisfiedLinkError e) {
-                IJ.log("unable to load dynamic library " + e.getMessage());
-                System.out.println("unable to load dynamic library " + e.getMessage());
+                System.out.println("Library not on path " + e.getMessage());
+            }
+
+            if (!s_libraryLoaded) {
+                // look for library in jar, using JNI
+                s_libraryLoaded = NativeLibraryUtil.loadNativeLibrary(this.getClass(), "slim-curve");
+
+                if (s_libraryLoaded) {
+                    IJ.log("load library from jar, use JNI");
+                }
+            }
+
+            if (!s_libraryLoaded) {
+                IJ.log("Unable to do fit.");
                 return 0;
             }
         }
@@ -229,227 +251,170 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
             }
         }
 
-        DoubleByReference chiSquare = new DoubleByReference();
-        double chiSquareTarget = 1.0; //TODO s/b specified incoming
+        if (s_libraryOnPath) {
+            // JNA version
+            DoubleByReference chiSquare = new DoubleByReference();
+            double chiSquareTarget = 1.0; //TODO s/b specified incoming
 
-        if (AlgorithmType.RLD.equals(m_algorithmType) || AlgorithmType.RLD_LMA.equals(m_algorithmType)) {
-            // RLD or triple integral fit
-            DoubleByReference z = new DoubleByReference();
-            DoubleByReference a = new DoubleByReference();
-            DoubleByReference tau = new DoubleByReference();
+            if (AlgorithmType.RLD.equals(m_algorithmType) || AlgorithmType.RLD_LMA.equals(m_algorithmType)) {
+                // RLD or triple integral fit
+                DoubleByReference z = new DoubleByReference();
+                DoubleByReference a = new DoubleByReference();
+                DoubleByReference tau = new DoubleByReference();
 
-            for (ICurveFitData data: dataArray) {
-                // grab incoming parameters
-                a.setValue(  data.getParams()[2]);
-                tau.setValue(data.getParams()[3]);
-                z.setValue(  data.getParams()[1]);
+                for (ICurveFitData data: dataArray) {
+                    // grab incoming parameters
+                    a.setValue(  data.getParams()[2]);
+                    tau.setValue(data.getParams()[3]);
+                    z.setValue(  data.getParams()[1]);
 
-                // get IRF curve, if any
-                double[] instrumentResponse = getInstrumentResponse(data.getPixels());
-                int nInstrumentResponse = 0;
-                if (null != instrumentResponse) {
-                    nInstrumentResponse = instrumentResponse.length;
-                }
+                    // get IRF curve, if any
+                    double[] instrumentResponse = getInstrumentResponse(data.getPixels());
+                    int nInstrumentResponse = 0;
+                    if (null != instrumentResponse) {
+                        nInstrumentResponse = instrumentResponse.length;
+                    }
 
-                returnValue = s_library.RLD_fit(
-                        m_xInc,
-                        data.getYCount(),
-                        start,
-                        stop,
-                        instrumentResponse,
-                        nInstrumentResponse,
-                        data.getSig(),
-                        z,
-                        a,
-                        tau,
-                        data.getYFitted(),
-                        chiSquare,
-                        chiSquareTarget
-                        );
-                // set outgoing parameters, unless they are fixed
-                data.getParams()[0] = chiSquare.getValue();
-                if (free[0]) {
-                    data.getParams()[1] = z.getValue();
-                }
-                if (free[1]) {
-                    data.getParams()[2] = a.getValue();
-                }
-                if (free[2]) {
-                    data.getParams()[3] = tau.getValue();
+                    returnValue = s_library.RLD_fit(
+                            m_xInc,
+                            data.getYCount(),
+                            start,
+                            stop,
+                            instrumentResponse,
+                            nInstrumentResponse,
+                            data.getSig(),
+                            z,
+                            a,
+                            tau,
+                            data.getYFitted(),
+                            chiSquare,
+                            chiSquareTarget
+                            );
+                    // set outgoing parameters, unless they are fixed
+                    data.getParams()[0] = chiSquare.getValue();
+                    if (free[0]) {
+                        data.getParams()[1] = z.getValue();
+                    }
+                    if (free[1]) {
+                        data.getParams()[2] = a.getValue();
+                    }
+                    if (free[2]) {
+                        data.getParams()[3] = tau.getValue();
+                    }
                 }
             }
-        }
 
-        if (AlgorithmType.LMA.equals(m_algorithmType) || AlgorithmType.RLD_LMA.equals(m_algorithmType)) {
-            // LMA fit
-            for (ICurveFitData data: dataArray) {
-                int nInstrumentResponse = 0;
-                if (null != m_instrumentResponse) {
-                    nInstrumentResponse = m_instrumentResponse.length;
+            if (AlgorithmType.LMA.equals(m_algorithmType) || AlgorithmType.RLD_LMA.equals(m_algorithmType)) {
+                // LMA fit
+                for (ICurveFitData data: dataArray) {
+                    int nInstrumentResponse = 0;
+                    if (null != m_instrumentResponse) {
+                        nInstrumentResponse = m_instrumentResponse.length;
+                    }
+                    returnValue = s_library.LMA_fit(
+                            m_xInc,
+                            data.getYCount(),
+                            start,
+                            stop,
+                            m_instrumentResponse,
+                            nInstrumentResponse,
+                            data.getSig(),
+                            data.getParams(),
+                            toIntArray(m_free),
+                            data.getParams().length - 1,
+                            data.getYFitted(),
+                            chiSquare,
+                            chiSquareTarget
+                            );
                 }
-                returnValue = s_library.LMA_fit(
-                        m_xInc,
-                        data.getYCount(),
-                        start,
-                        stop,
-                        m_instrumentResponse,
-                        nInstrumentResponse,
-                        data.getSig(),
-                        data.getParams(),
-                        toIntArray(m_free),
-                        data.getParams().length - 1,
-                        data.getYFitted(),
-                        chiSquare,
-                        chiSquareTarget
-                        );
             }
-        }
-        //TODO error return deserves much more thought!!  Just returning the last value here!!
-        return returnValue;
-
         }
         else {
-        //TODO
-        if (!s_loaded) {
-            try {
-                // extract to library path
-                //TODO sort out the nameSystem.out.println("extract native library returns " + NativeLibraryUtil.extractNativeLibraryToPath(this.getClass(), "SLIMCurve-2.0-SNAPSHOT"));
-                //System.out.println("extract native library returns " + NativeLibraryUtil.extractNativeLibraryToPath(this.getClass(), "slim-curve-1.0-SNAPSHOT"));
+            // JNI version
 
-                //System.out.println("loadNativeLibrary returns " + NativeLibraryUtil.loadNativeLibrary(this.getClass(), "slim-curve"));
+            // use array to pass double by reference
+            double[] chiSquare = new double[1];
+            double chiSquareTarget = 1.0; //TODO s/b specified incoming
 
-                boolean inNetBeans = false; //TODO useful for debugging when running NetBeans, requires dylib to be in slim-plugin directory // true;
-                if (inNetBeans) {
-                    System.loadLibrary("slim-curve-1.0-SNAPSHOT");
-                    s_loaded = true;
+            if (AlgorithmType.RLD.equals(m_algorithmType) || AlgorithmType.RLD_LMA.equals(m_algorithmType)) {
+                // RLD or triple integral fit
+
+                // use arrays to pass double by reference
+                double[] z = new double[1];
+                double[] a = new double[1];
+                double[] tau = new double[1];
+
+                for (ICurveFitData data: dataArray) {
+                    // grab incoming parameters
+                    a[0] = data.getParams()[2];
+                    tau[0] = data.getParams()[3];
+                    z[0] = data.getParams()[1];
+
+                    // get IRF curve, if any
+                    double[] instrumentResponse = getInstrumentResponse(data.getPixels());
+                    int nInstrumentResponse = 0;
+                    if (null != instrumentResponse) {
+                        nInstrumentResponse = instrumentResponse.length;
+                    }
+
+                    returnValue = RLD_fit(m_xInc,
+                            data.getYCount(),
+                            start,
+                            stop,
+                            instrumentResponse,
+                            nInstrumentResponse,
+                            data.getSig(),
+                            z,
+                            a,
+                            tau,
+                            data.getYFitted(),
+                            chiSquare,
+                            chiSquareTarget
+                            );
+
+                    // set outgoing parameters, unless they are fixed
+                    data.getParams()[0] = chiSquare[0];
+                    if (free[0]) {
+                        data.getParams()[1] = z[0];
+                    }
+                    if (free[1]) {
+                        data.getParams()[2] = a[0];
+                    }
+                    if (free[2]) {
+                        data.getParams()[3] = tau[0];
+                    }
                 }
-                else {
-                    s_loaded = NativeLibraryUtil.loadNativeLibrary(this.getClass(), "slim-curve");
-                }
-
-                //IJ.log("before System load library");
-               ////// System.loadLibrary("slim-curve-1.0-SNAPSHOT");
-                //IJ.log("after System load library");
-
-                // load once, on-demand
-                //TODO sort out the name s_library = (CLibrary) Native.loadLibrary("SLIMCurve", CLibrary.class);
-               //TODO test with old code instead: s_library = (CLibrary) Native.loadLibrary("slim-curve-1.0-SNAPSHOT", CLibrary.class);
-                //TODO this was yet another version s_library = (CLibrary) Native.loadLibrary("SLIMCurve_trimmed_down", CLibrary.class);
-                //s_library = (CLibrary) Native.loadLibrary("slim-curve-1.0-SNAPSHOT", CLibrary.class);
-
-                //System.out.println("s_library is " + s_library);
-                System.out.println("s_loaded is " + s_loaded);
-                IJ.log("s_loaded is " + s_loaded);
             }
-            catch (UnsatisfiedLinkError e) {
-                IJ.log("unable to load dynamic library " + e.getMessage());
-                System.out.println("unable to load dynamic library " + e.getMessage());
-                return 0;
-            }
-        }
-        IJ.log("test");
 
-        //TODO ARG 9/3/10 these issues still need to be addressed:
-
-        //TODO ARG since initial x = fit_start * xincr we have to supply the unused portion of y[] before fit_start.
-        // if this data were already premassaged it might be better to get rid of fit_start & _end, just give the
-        // portion to be fitted and specify an initial x.
-        //TODO ARG August use initial X of 0.
-
-        boolean[] free = m_free.clone();
-        if (AlgorithmType.RLD.equals(m_algorithmType)) {
-            // pure RLD (versus RLD followed by LMA) has no way to fix
-            // parameters
-            for (int i = 0; i < free.length; ++i) {
-                free[i] = true;
-            }
-        }
-
-        // use array to pass double by reference
-        double[] chiSquare = new double[1];
-        double chiSquareTarget = 1.0; //TODO s/b specified incoming
-
-        if (AlgorithmType.RLD.equals(m_algorithmType) || AlgorithmType.RLD_LMA.equals(m_algorithmType)) {
-            // RLD or triple integral fit
-
-            // use arrays to pass double by reference
-            double[] z = new double[1];
-            double[] a = new double[1];
-            double[] tau = new double[1];
-
-            for (ICurveFitData data: dataArray) {
-                // grab incoming parameters
-                a[0] = data.getParams()[2];
-                tau[0] = data.getParams()[3];
-                z[0] = data.getParams()[1];
-
-                // get IRF curve, if any
-                double[] instrumentResponse = getInstrumentResponse(data.getPixels());
-                int nInstrumentResponse = 0;
-                if (null != instrumentResponse) {
-                    nInstrumentResponse = instrumentResponse.length;
-                }
-
-          IJ.log("about to do RLD_fit");
-                returnValue = RLD_fit(m_xInc,
-                        data.getYCount(),
-                        start,
-                        stop,
-                        instrumentResponse,
-                        nInstrumentResponse,
-                        data.getSig(),
-                        z,
-                        a,
-                        tau,
-                        data.getYFitted(),
-                        chiSquare,
-                        chiSquareTarget
-                        );
-           IJ.log("did RLD_fit");
-                // set outgoing parameters, unless they are fixed
-                data.getParams()[0] = chiSquare[0];
-                if (free[0]) {
-                    data.getParams()[1] = z[0];
-                }
-                if (free[1]) {
-                    data.getParams()[2] = a[0];
-                }
-                if (free[2]) {
-                    data.getParams()[3] = tau[0];
+            if (AlgorithmType.LMA.equals(m_algorithmType) || AlgorithmType.RLD_LMA.equals(m_algorithmType)) {
+                // LMA fit
+                for (ICurveFitData data: dataArray) {
+                    int nInstrumentResponse = 0;
+                    if (null != m_instrumentResponse) {
+                        nInstrumentResponse = m_instrumentResponse.length;
+                    }
+                    returnValue = LMA_fit(
+                            m_xInc,
+                            data.getYCount(),
+                            start,
+                            stop,
+                            m_instrumentResponse,
+                            nInstrumentResponse,
+                            data.getSig(),
+                            data.getParams(),
+                            toIntArray(m_free),
+                            data.getParams().length - 1,
+                            data.getYFitted(),
+                            chiSquare,
+                            chiSquareTarget
+                            );
                 }
             }
         }
 
-        if (AlgorithmType.LMA.equals(m_algorithmType) || AlgorithmType.RLD_LMA.equals(m_algorithmType)) {
-            // LMA fit
-            for (ICurveFitData data: dataArray) {
-                int nInstrumentResponse = 0;
-                if (null != m_instrumentResponse) {
-                    nInstrumentResponse = m_instrumentResponse.length;
-                }
-                returnValue = LMA_fit(
-                        m_xInc,
-                        data.getYCount(),
-                        start,
-                        stop,
-                        m_instrumentResponse,
-                        nInstrumentResponse,
-                        data.getSig(),
-                        data.getParams(),
-                        toIntArray(m_free),
-                        data.getParams().length - 1,
-                        data.getYFitted(),
-                        chiSquare,
-                        chiSquareTarget
-                        );
-            }
-        }
         //TODO error return deserves much more thought!!  Just returning the last value here!!
-        IJ.log("SLIMCurveFitter.fitData returns " + returnValue);
         return returnValue;
-        //TODO old style:
-        }
-        //TODO
+
     }
 
     int[] toIntArray(boolean[] booleanArray) {
