@@ -66,27 +66,22 @@
     </dependency>
   </dependencies>
 
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifest>
+              <packageName>loci.curvefitter</packageName>
+            </manifest>
+          </archive>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
   <profiles>
-    <profile>
-      <id>default</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-jar-plugin</artifactId>
-            <configuration>
-              <archive>
-                <manifest>
-                  <packageName>loci.curvefitter</packageName>
-                </manifest>
-              </archive>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
     <profile>
       <id>with-libs</id>
       <build>
