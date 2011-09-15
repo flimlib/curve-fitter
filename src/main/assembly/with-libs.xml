@@ -1,98 +1,17 @@
-<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<assembly
+  xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
   <id>with-libs</id>
   <formats>
     <format>jar</format>
   </formats>
   <includeBaseDirectory>false</includeBaseDirectory>
-  <!--
-  <baseDirectory/>
-  <includeSiteDirectory/>
-  <containerDescriptorHandlers>
-    <containerDescriptorHandler>
-      <handlerName/>
-    </containerDescriptorHandler>
-  </containerDescriptorHandlers> -->
-  <!--
-  <moduleSets>
-    <moduleSet>
-      <includeSubModules/>
-      <includes/>
-      <excludes/>
-      <sources>
-        <useDefaultExcludes/>
-        <outputDirectory/>
-        <includes/>
-        <excludes/>
-        <fileMode/>
-        <directoryMode/>
-        <fileSets>
-          <fileSet>
-            <useDefaultExcludes/>
-            <outputDirectory/>
-            <includes/>
-            <excludes/>
-            <fileMode/>
-            <directoryMode/>
-            <directory/>
-            <filtered/>
-          </fileSet>
-        </fileSets>
-        <includeModuleDirectory/>
-        <excludeSubModuleDirectories/>
-        <outputDirectoryMapping/>
-      </sources>
-      <binaries>
-        <outputDirectory/>
-        <includes/>
-        <excludes/>
-        <fileMode/>
-        <directoryMode/>
-        <attachmentClassifier/>
-        <includeDependencies/>
-        <dependencySets>
-          <dependencySet>
-            <outputDirectory/>
-            <includes/>
-            <excludes/>
-            <fileMode/>
-            <directoryMode/>
-            <useStrictFiltering/>
-            <outputFileNameMapping/>
-            <unpack/>
-            <unpackOptions>
-              <includes/>
-              <excludes/>
-              <filtered/>
-            </unpackOptions>
-            <scope/>
-            <useProjectArtifact/>
-            <useProjectAttachments/>
-            <useTransitiveDependencies/>
-            <useTransitiveFiltering/>
-          </dependencySet>
-        </dependencySets>
-        <unpack/>
-        <unpackOptions>
-          <includes/>
-          <excludes/>
-          <filtered/>
-        </unpackOptions>
-        <outputFileNameMapping/>
-      </binaries>
-    </moduleSet>
-  </moduleSets> -->
-  <moduleSets>
-    <moduleSet>
-      <!-- Enable access to all projects in the current multimodule build -->
-      <!-- unknown tag; I guess the docs are wrong?? useAllReactorProjects>true</useAllReactorProjects -->
-      <!-- Select which projects to include in this module set -->
-      <includes>
-        <include>loci:slim-curve</include>
-      </includes>
-    </moduleSet>
-  </moduleSets>
   <fileSets>
+    <fileSet>
+      <directory>${project.build.outputDirectory}</directory>
+      <outputDirectory>/</outputDirectory>
+    </fileSet>
     <fileSet>
       <directory>${project.build.directory}/nar/lib/x86_64-MacOSX-gpp/shared</directory>
       <outputDirectory>lib/x86_64-MacOSX-gpp</outputDirectory>
@@ -115,55 +34,4 @@
       </includes>
     </fileSet>
   </fileSets>
-  <!-- <files>
-    <file>
-      <source/>
-      <outputDirectory/>
-      <destName/>
-      <fileMode/>
-      <filtered/>
-    </file>
-  </files> -->
-  <!--
-  <dependencySets>
-    <dependencySet>
-      <outputDirectory/>
-      <includes/>
-      <excludes/>
-      <fileMode/>
-      <directoryMode/>
-      <useStrictFiltering/>
-      <outputFileNameMapping/>
-      <unpack/>
-      <unpackOptions>
-        <includes/>
-        <excludes/>
-        <filtered/>
-      </unpackOptions>
-      <scope/>
-      <useProjectArtifact/>
-      <useProjectAttachments/>
-      <useTransitiveDependencies/>
-      <useTransitiveFiltering/>
-    </dependencySet>
-  </dependencySets>
-  <repositories>
-    <repository>
-      <outputDirectory/>
-      <includes/>
-      <excludes/>
-      <fileMode/>
-      <directoryMode/>
-      <includeMetadata/>
-      <groupVersionAlignments>
-        <groupVersionAlignment>
-          <id/>
-          <version/>
-          <excludes/>
-        </groupVersionAlignment>
-      </groupVersionAlignments>
-      <scope/>
-    </repository>
-  </repositories> -->
-  <componentDescriptors/>
 </assembly>
