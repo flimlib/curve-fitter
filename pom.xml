@@ -93,9 +93,9 @@
             <configuration>
               <ignore>true</ignore>
               <classifiers>
-                <classifier>x86-Windows-msvc-shared</classifier>
+                <!--<classifier>x86-Windows-msvc-shared</classifier>-->
                 <classifier>x86_64-MacOSX-gpp-shared</classifier>
-                <classifier>i386-Linux-g++-shared</classifier>
+                <classifier>amd64-Linux-g++-shared</classifier>
               </classifiers>
               <libraries>
                 <library>
@@ -117,12 +117,12 @@
             <artifactId>maven-assembly-plugin</artifactId>
             <configuration>
               <descriptors>
-                <descriptor>assembly-descriptor.xml</descriptor>
+                <descriptor>src/main/assembly/with-libs.xml</descriptor>
               </descriptors>
             </configuration>
             <executions>
               <execution>
-                <id>make-assembly</id> <!-- this is used for inheritance merges -->
+                <id>make-assembly</id>
                 <phase>package</phase>
                 <goals>
                   <goal>single</goal>
