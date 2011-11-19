@@ -80,14 +80,6 @@ public class GrayCurveFitter extends AbstractCurveFitter {
 									float chisq_target, int chisq_percent) {*/
     }
 
-    public GrayCurveFitter(int algType) {
-        m_algType = algType;
-    }
-
-    public GrayCurveFitter() {
-        m_algType = 0;
-    }
-
     @Override
     public int fitData(ICurveFitData[] dataArray, int start, int stop) {
         CLibrary lib = (CLibrary) Native.loadLibrary("GrayCode", CLibrary.class);
@@ -97,7 +89,7 @@ public class GrayCurveFitter extends AbstractCurveFitter {
         // portion to be fitted and specify an initial x.
         //TODO ARG August use initial X of 0.
 
-        if (0 == m_algType) {
+        if (FitAlgorithm.RLD.equals(m_fitAlgorithm)) {
             float xincr = (float) m_xInc;
             int fitStart = start;
             int fitEnd = stop;

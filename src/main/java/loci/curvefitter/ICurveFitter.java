@@ -40,7 +40,14 @@ package loci.curvefitter;
  * @author Aivar Grislis
  */
 public interface ICurveFitter {
-
+    
+    /**
+     * Specifies fitting algorithm.
+     */
+    public enum FitAlgorithm {
+        RLD, LMA, RLD_LMA
+    }
+    
     /**
      * Specifies curves that this fits.
      */
@@ -52,6 +59,20 @@ public interface ICurveFitter {
      * Default increment along x axis (evenly spaced).
      */
     public double DEFAULT_X_INC = 1.0f;
+    
+    /**
+     * Get fitting algorithm.
+     * 
+     * @return fitting algorithm
+     */
+    public FitAlgorithm getFitAlgorithm();
+    
+    /**
+     * Set fitting algorithm.
+     * 
+     * @param fitting algorithm
+     */
+    public void setFitAlgorithm(FitAlgorithm algorithm);
 
     /**
      * Get function we are fitting.
@@ -131,5 +152,5 @@ public interface ICurveFitter {
      * @param stop last index to fit (inclusive)
      * @return status code
      */
-    public int fitData(ICurveFitData[] data, int start, int stop);
+    public int fitData(ICurveFitData[] data, int start, int stop); 
 }

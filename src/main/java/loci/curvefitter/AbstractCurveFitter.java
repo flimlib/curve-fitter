@@ -40,10 +40,21 @@ package loci.curvefitter;
  * @author Aivar Grislis
  */
 public abstract class AbstractCurveFitter implements ICurveFitter {
+    FitAlgorithm m_fitAlgorithm;
     FitFunction m_fitFunction;
     double m_xInc = ICurveFitter.DEFAULT_X_INC;
     boolean[] m_free;
     double[] m_instrumentResponse;
+    
+    @Override
+    public FitAlgorithm getFitAlgorithm() {
+        return m_fitAlgorithm;
+    }
+    
+    @Override
+    public void setFitAlgorithm(FitAlgorithm algorithm) {
+        m_fitAlgorithm = algorithm;
+    }
     
     @Override
     public FitFunction getFitFunction() {

@@ -119,14 +119,6 @@ public class GrayNRCurveFitter extends AbstractCurveFitter {
 									float chisq_target, int chisq_percent) {*/
     }
 
-    public GrayNRCurveFitter(int algType) {
-        m_algType = algType;
-    }
-
-    public GrayNRCurveFitter() {
-        m_algType = 0;
-    }
-
 
     @Override
     public int fitData(ICurveFitData[] dataArray, int start, int stop) {
@@ -159,7 +151,7 @@ public class GrayNRCurveFitter extends AbstractCurveFitter {
             sig[i] = 1.0; // basically ignoring sig for now
         }
 
-        if (0 == m_algType) { //TODO crude; use enums
+        if (FitAlgorithm.RLD.equals(m_fitAlgorithm)) {
             // RLD or triple integral fit
             DoubleByReference z = new DoubleByReference();
             DoubleByReference a = new DoubleByReference();

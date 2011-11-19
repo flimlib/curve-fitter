@@ -54,13 +54,9 @@ import imagej.nativelibrary.NativeLibraryUtil;
  * @author Aivar Grislis grislis at wisc.edu
  */
 public class SLIMCurveFitter extends AbstractCurveFitter {
-    public enum AlgorithmType { RLD, LMA, RLD_LMA };
-
     private static boolean s_libraryLoaded = false;
     private static boolean s_libraryOnPath = false;
     private static CLibrary s_library;
-
-    private AlgorithmType m_algorithmType;
 
     /**
      * This interface supports loading the library using JNA.
@@ -181,24 +177,6 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                            double chiSquareTarget
                            );
 
-    /**
-     * Create a curve fitter for a given algorithm type.
-     *
-     * @param algorithmType
-     */
-    public SLIMCurveFitter(AlgorithmType algorithmType) {
-        m_algorithmType = algorithmType;
-    }
-
-    /**
-     * Create the default curve fitter, which uses RLD.
-     *
-     */
-    public SLIMCurveFitter() {
-        m_algorithmType = AlgorithmType.RLD;
-    }
-
-
     @Override
     public int fitData(ICurveFitData[] dataArray, int start, int stop) {
         int returnValue = 0;
@@ -238,7 +216,7 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
         //TODO ARG August use initial X of 0.
 
         boolean[] free = m_free.clone();
-        if (AlgorithmType.RLD.equals(m_algorithmType)) {
+        if (FitAlgorithm.RLD.equals(m_fitAlgorithm)) {
             // pure RLD (versus RLD followed by LMA) has no way to fix
             // parameters
             for (int i = 0; i < free.length; ++i) {
@@ -250,8 +228,8 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
             // JNA version
             DoubleByReference chiSquare = new DoubleByReference();
             double chiSquareTarget = 1.0; //TODO s/b specified incoming
-
-            if (AlgorithmType.RLD.equals(m_algorithmType) || AlgorithmType.RLD_LMA.equals(m_algorithmType)) {
+            
+            if (FitAlgorithm.RLD.equals(m_fitAlgorithm) || FitAlgorithm.RLD_LMA.equals(m_fitAlgorithm)) {
                 // RLD or triple integral fit
                 DoubleByReference z = new DoubleByReference();
                 DoubleByReference a = new DoubleByReference();
@@ -298,8 +276,8 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                     }
                 }
             }
-
-            if (AlgorithmType.LMA.equals(m_algorithmType) || AlgorithmType.RLD_LMA.equals(m_algorithmType)) {
+            
+            if (FitAlgorithm.LMA.equals(m_fitAlgorithm) || FitAlgorithm.RLD_LMA.equals(m_fitAlgorithm)) {
                 // LMA fit
                 for (ICurveFitData data: dataArray) {
                     int nInstrumentResponse = 0;
@@ -330,8 +308,8 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
             // use array to pass double by reference
             double[] chiSquare = new double[1];
             double chiSquareTarget = 1.0; //TODO s/b specified incoming
-
-            if (AlgorithmType.RLD.equals(m_algorithmType) || AlgorithmType.RLD_LMA.equals(m_algorithmType)) {
+            
+            if (FitAlgorithm.RLD.equals(m_fitAlgorithm) || FitAlgorithm.RLD_LMA.equals(m_fitAlgorithm)) {
                 // RLD or triple integral fit
 
                 // use arrays to pass double by reference
@@ -381,7 +359,7 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                 }
             }
 
-            if (AlgorithmType.LMA.equals(m_algorithmType) || AlgorithmType.RLD_LMA.equals(m_algorithmType)) {
+            if (FitAlgorithm.LMA.equals(m_fitAlgorithm) || FitAlgorithm.RLD_LMA.equals(m_fitAlgorithm)) {
                 // LMA fit
                 for (ICurveFitData data: dataArray) {
                     int nInstrumentResponse = 0;
