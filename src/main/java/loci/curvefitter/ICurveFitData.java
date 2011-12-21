@@ -170,8 +170,7 @@ public interface ICurveFitData {
      * 
      * @param chiSquare targetted chi square
      */
-    public void setChiSquareTarget(double chiSquareTarget);
-    
+    public void setChiSquareTarget(double chiSquareTarget); 
 
     /**
      * Gets fitted chi square.

@@ -37,11 +37,12 @@ package loci.curvefitter;
 /**
  * Abstract base class for curve fitters.
  *
- * @author Aivar Grislis
+ * @author Aivar Grislis grislis at wisc dot edu
  */
 public abstract class AbstractCurveFitter implements ICurveFitter {
     FitAlgorithm m_fitAlgorithm;
     FitFunction m_fitFunction;
+    NoiseModel m_noiseModel;
     double m_xInc = ICurveFitter.DEFAULT_X_INC;
     boolean[] m_free;
     double[] m_instrumentResponse;
@@ -64,6 +65,16 @@ public abstract class AbstractCurveFitter implements ICurveFitter {
     @Override
     public void setFitFunction(FitFunction function) {
         m_fitFunction = function;
+    }
+
+    @Override
+    public NoiseModel getNoiseModel() {
+        return m_noiseModel;
+    }
+
+    @Override
+    public void setNoiseModel(NoiseModel noiseModel) {
+        m_noiseModel = noiseModel;
     }
 
     @Override

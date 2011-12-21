@@ -54,6 +54,13 @@ public interface ICurveFitter {
     public enum FitFunction {
         SINGLE_EXPONENTIAL, DOUBLE_EXPONENTIAL, TRIPLE_EXPONENTIAL, STRETCHED_EXPONENTIAL
     }
+    
+    /**
+     * Specifies noise model for fit.
+     */
+    public enum NoiseModel {
+        GAUSSIAN_FIT, POISSON_FIT, POISSON_DATA, MAXIMUM_LIKELIHOOD
+    }
 
     /**
      * Default increment along x axis (evenly spaced).
@@ -87,6 +94,20 @@ public interface ICurveFitter {
      * @param function
      */
     public void setFitFunction(FitFunction function);
+    
+    /**
+     * Get noise model for fit.
+     * 
+     * @return 
+     */
+    public NoiseModel getNoiseModel();
+
+    /**
+     * Sets noise model for fit.
+     * 
+     * @param noiseModel 
+     */
+    public void setNoiseModel(NoiseModel noiseModel);
 
     /**
      * Get number of function components.

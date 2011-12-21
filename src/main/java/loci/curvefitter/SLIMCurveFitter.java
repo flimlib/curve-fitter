@@ -223,7 +223,7 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                 free[i] = true;
             }
         }
-
+        
         if (s_libraryOnPath) {
             // JNA version
             DoubleByReference chiSquare = new DoubleByReference();
