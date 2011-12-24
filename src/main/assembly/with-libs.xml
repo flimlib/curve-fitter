@@ -13,13 +13,20 @@
       <outputDirectory>/</outputDirectory>
     </fileSet>
     <fileSet>
+      <directory>${project.build.directory}/nar/lib/amd64-Linux-gpp/shared</directory>
+      <outputDirectory>META-INF/lib/amd64-Linux-gpp</outputDirectory>
+      <includes>
+        <include>*.so</include>
+      </includes>
+    </fileSet>
+    <fileSet>
       <directory>${project.build.directory}/nar/lib/x86_64-MacOSX-gpp/shared</directory>
-      <outputDirectory>lib/x86_64-MacOSX-gpp</outputDirectory>
+      <outputDirectory>META-INF/lib/x86_64-MacOSX-gpp</outputDirectory>
       <includes>
         <include>*.dylib</include>
       </includes>
     </fileSet>
-    <fileSet>
+    <!-- fileSet>
       <directory>${project.build.directory}/nar/lib/x86-Windows-msvc/shared</directory>
       <outputDirectory>lib/x86-Windows-msvc</outputDirectory>
       <includes>
@@ -32,6 +39,6 @@
       <includes>
         <include>*.so</include>
       </includes>
-    </fileSet>
+    </fileSet -->
   </fileSets>
 </assembly>

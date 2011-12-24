@@ -93,9 +93,10 @@
             <configuration>
               <ignore>true</ignore>
               <classifiers>
-                <!--<classifier>x86-Windows-msvc-shared</classifier>-->
+                <!-- if one classifier fails, rest are ignored -->
                 <classifier>x86_64-MacOSX-gpp-shared</classifier>
-                <classifier>amd64-Linux-g++-shared</classifier>
+                <classifier>amd64-Linux-gpp-shared</classifier>
+                <classifier>x86-Windows-msvc-shared</classifier>
               </classifiers>
               <libraries>
                 <library>
