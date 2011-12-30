@@ -210,9 +210,11 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                     s_libraryLoaded = NativeLibraryUtil.loadNativeLibrary(this.getClass(), "slim-curve");
                 }
             }
-
         }
-        if (!s_libraryLoaded) {
+        if (s_libraryLoaded) {
+            IJ.log("Library loaded");
+        }
+        else {
             IJ.log("Unable to do fit.");
             return 0;
         }
