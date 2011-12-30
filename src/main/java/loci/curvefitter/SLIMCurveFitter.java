@@ -54,7 +54,8 @@ import imagej.nativelibrary.NativeLibraryUtil;
  * @author Aivar Grislis grislis at wisc.edu
  */
 public class SLIMCurveFitter extends AbstractCurveFitter {
-    private static boolean s_libraryLoaded = false;
+    private static Object s_synchObject = new Object();
+    private static volatile boolean s_libraryLoaded = false;
     private static boolean s_libraryOnPath = false;
     private static CLibrary s_library;
 
@@ -184,28 +185,30 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
         // load the native library, if not already loaded
         if (!s_libraryLoaded) {
 
-            // look for library on path
-            try {
-                // use JNA
-                s_library = (CLibrary) Native.loadLibrary("slim-curve-1.0-SNAPSHOT", CLibrary.class);
-                s_libraryLoaded = true;
-                s_libraryOnPath = true;
+            synchronized (s_synchObject) {
+                // look for library on path
+                try {
+                    IJ.log("Using JNA");
+                    s_library = (CLibrary) Native.loadLibrary("slim-curve-1.0-SNAPSHOT", CLibrary.class);
+                    s_libraryLoaded = true;
+                    s_libraryOnPath = true;
+                }
+                catch (UnsatisfiedLinkError e) {
+                    System.out.println("Library not on path " + e.getMessage());
+                    IJ.log("Library not on path " + e.getMessage());
+                }
 
-                System.out.println("Using JNA");
-            }
-            catch (UnsatisfiedLinkError e) {
-                System.out.println("Library not on path " + e.getMessage());
-            }
-
-            if (!s_libraryLoaded) {
-                // look for library in jar, using JNI
-                s_libraryLoaded = NativeLibraryUtil.loadNativeLibrary(this.getClass(), "slim-curve");
+                if (!s_libraryLoaded) {
+                    // look for library in jar, using JNI
+                    IJ.log("Using JNI");
+                    s_libraryLoaded = NativeLibraryUtil.loadNativeLibrary(this.getClass(), "slim-curve");
+                }
             }
 
-            if (!s_libraryLoaded) {
-                IJ.log("Unable to do fit.");
-                return 0;
-            }
+        }
+        if (!s_libraryLoaded) {
+            IJ.log("Unable to do fit.");
+            return 0;
         }
 
         //TODO ARG 9/3/10 these issues still need to be addressed:
