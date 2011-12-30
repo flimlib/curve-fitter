@@ -186,17 +186,23 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
         if (!s_libraryLoaded) {
 
             synchronized (s_synchObject) {
-                // look for library on path
-                try {
-                    IJ.log("Using JNA");
-                    s_library = (CLibrary) Native.loadLibrary("slim-curve-1.0-SNAPSHOT", CLibrary.class);
-                    s_libraryLoaded = true;
-                    s_libraryOnPath = true;
+
+                // check again to see if some other thread loaded it
+                if (!s_libraryLoaded) {
+                    
+                    // look for library on path
+                    try {
+                        IJ.log("Using JNA");
+                        s_library = (CLibrary) Native.loadLibrary("slim-curve-1.0-SNAPSHOT", CLibrary.class);
+                        s_libraryLoaded = true;
+                        s_libraryOnPath = true;
+                    }
+                    catch (UnsatisfiedLinkError e) {
+                        System.out.println("Library not on path " + e.getMessage());
+                        IJ.log("Library not on path " + e.getMessage());
+                    } 
                 }
-                catch (UnsatisfiedLinkError e) {
-                    System.out.println("Library not on path " + e.getMessage());
-                    IJ.log("Library not on path " + e.getMessage());
-                }
+
 
                 if (!s_libraryLoaded) {
                     // look for library in jar, using JNI
