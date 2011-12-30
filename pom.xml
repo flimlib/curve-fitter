@@ -93,10 +93,10 @@
             <configuration>
               <ignore>true</ignore>
               <classifiers>
-                <!-- if one classifier fails, rest are ignored -->
+                <!-- if one classifier fails, rest are ignored -->    
                 <classifier>x86_64-MacOSX-gpp-shared</classifier>
+                <classifier>x86-Windows-msvc-shared</classifier>  
                 <classifier>amd64-Linux-gpp-shared</classifier>
-                <classifier>x86-Windows-msvc-shared</classifier>
               </classifiers>
               <libraries>
                 <library>
