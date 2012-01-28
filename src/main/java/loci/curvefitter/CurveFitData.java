@@ -53,6 +53,7 @@ public class CurveFitData implements ICurveFitData {
     double[] m_sig;
     double[] m_yFitted;
     double m_chiSquareTarget;
+    double m_chiSquareDelta;
     double m_chiSquare;
     Object m_userData;
 
@@ -144,6 +145,16 @@ public class CurveFitData implements ICurveFitData {
     @Override
     public void setChiSquareTarget(double chiSquareTarget) {
         m_chiSquareTarget = chiSquareTarget;
+    }
+    
+    @Override
+    public double getChiSquareDelta() {
+        return m_chiSquareDelta;
+    }
+    
+    @Override
+    public void setChiSquareDelta(double chiSquareDelta) {
+        m_chiSquareDelta = chiSquareDelta;
     }
     
     @Override
