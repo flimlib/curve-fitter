@@ -151,7 +151,7 @@ public class GrayNRCurveFitter extends AbstractCurveFitter {
             sig[i] = 1.0; // basically ignoring sig for now
         }
 
-        if (FitAlgorithm.RLD.equals(m_fitAlgorithm)) {
+        if (FitAlgorithm.SLIMCURVE_RLD.equals(m_fitAlgorithm)) {
             // RLD or triple integral fit
             DoubleByReference z = new DoubleByReference();
             DoubleByReference a = new DoubleByReference();

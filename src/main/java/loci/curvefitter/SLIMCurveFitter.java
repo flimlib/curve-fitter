@@ -34,7 +34,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package loci.curvefitter;
 
-//TODO old style:
+//TODO used for JNA version
 import com.sun.jna.Library;
 import com.sun.jna.Native;
 import com.sun.jna.ptr.DoubleByReference;
@@ -73,6 +73,7 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                            int fitEnd,
                            double instr[],
                            int nInstr,
+                           int noise,
                            double sig[],
                            DoubleByReference z,
                            DoubleByReference a,
@@ -92,13 +93,15 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                            int fitEnd,
                            double instr[],
                            int n_instr,
+                           int noise,
                            double sig[],
                            double param[],
                            int paramFree[],
                            int nParam,
                            double fitted[],
                            DoubleByReference chiSquare,
-                           double chiSquareTarget
+                           double chiSquareTarget,
+                           double chiSquareDelta
                            );
     }
 
@@ -132,6 +135,7 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                            int fitEnd,
                            double instr[],
                            int nInstr,
+                           int noise,
                            double sig[],
                            double z[],
                            double a[],
@@ -169,18 +173,25 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                            int fitEnd,
                            double instr[],
                            int n_instr,
+                           int noise,
                            double sig[],
                            double param[],
                            int paramFree[],
                            int nParam,
                            double fitted[],
                            double chiSquare[],
-                           double chiSquareTarget
+                           double chiSquareTarget,
+                           double chiSquareDelta
                            );
 
     @Override
     public int fitData(ICurveFitData[] dataArray, int start, int stop) {
         int returnValue = 0;
+        int noise = getNoiseModel().ordinal();
+        System.out.println("noise is " + noise);
+        
+        //TODO temporary
+        double chiSquareDelta = 0.0;
 
         // load the native library, if not already loaded
         if (!s_libraryLoaded) {
@@ -211,10 +222,7 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                 }
             }
         }
-        if (s_libraryLoaded) {
-            IJ.log("Library loaded");
-        }
-        else {
+        if (!s_libraryLoaded) {
             IJ.log("Unable to do fit.");
             return 0;
         }
@@ -225,9 +233,9 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
         // if this data were already premassaged it might be better to get rid of fit_start & _end, just give the
         // portion to be fitted and specify an initial x.
         //TODO ARG August use initial X of 0.
-
+        
         boolean[] free = m_free.clone();
-        if (FitAlgorithm.RLD.equals(m_fitAlgorithm)) {
+        if (FitAlgorithm.SLIMCURVE_RLD.equals(m_fitAlgorithm)) {
             // pure RLD (versus RLD followed by LMA) has no way to fix
             // parameters
             for (int i = 0; i < free.length; ++i) {
@@ -238,9 +246,8 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
         if (s_libraryOnPath) {
             // JNA version
             DoubleByReference chiSquare = new DoubleByReference();
-            double chiSquareTarget = 1.0; //TODO s/b specified incoming
             
-            if (FitAlgorithm.RLD.equals(m_fitAlgorithm) || FitAlgorithm.RLD_LMA.equals(m_fitAlgorithm)) {
+            if (FitAlgorithm.SLIMCURVE_RLD.equals(m_fitAlgorithm) || FitAlgorithm.SLIMCURVE_RLD_LMA.equals(m_fitAlgorithm)) {
                 // RLD or triple integral fit
                 DoubleByReference z = new DoubleByReference();
                 DoubleByReference a = new DoubleByReference();
@@ -251,14 +258,14 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                     a.setValue(  data.getParams()[2]);
                     tau.setValue(data.getParams()[3]);
                     z.setValue(  data.getParams()[1]);
-
+                    
                     // get IRF curve, if any
                     double[] instrumentResponse = getInstrumentResponse(data.getPixels());
                     int nInstrumentResponse = 0;
                     if (null != instrumentResponse) {
                         nInstrumentResponse = instrumentResponse.length;
                     }
-
+                    
                     returnValue = s_library.RLD_fit(
                             m_xInc,
                             data.getYCount(),
@@ -266,13 +273,14 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                             stop,
                             instrumentResponse,
                             nInstrumentResponse,
+                            noise,
                             data.getSig(),
                             z,
                             a,
                             tau,
                             data.getYFitted(),
                             chiSquare,
-                            chiSquareTarget
+                            data.getChiSquareTarget()
                             );
                     // set outgoing parameters, unless they are fixed
                     data.getParams()[0] = chiSquare.getValue();
@@ -288,7 +296,7 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                 }
             }
             
-            if (FitAlgorithm.LMA.equals(m_fitAlgorithm) || FitAlgorithm.RLD_LMA.equals(m_fitAlgorithm)) {
+            if (FitAlgorithm.SLIMCURVE_LMA.equals(m_fitAlgorithm) || FitAlgorithm.SLIMCURVE_RLD_LMA.equals(m_fitAlgorithm)) {
                 // LMA fit
                 for (ICurveFitData data: dataArray) {
                     int nInstrumentResponse = 0;
@@ -302,13 +310,15 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                             stop,
                             m_instrumentResponse,
                             nInstrumentResponse,
+                            noise,
                             data.getSig(),
                             data.getParams(),
                             toIntArray(m_free),
                             data.getParams().length - 1,
                             data.getYFitted(),
                             chiSquare,
-                            chiSquareTarget
+                            data.getChiSquareTarget(),
+                            data.getChiSquareDelta()
                             );
                 }
             }
@@ -318,9 +328,8 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
 
             // use array to pass double by reference
             double[] chiSquare = new double[1];
-            double chiSquareTarget = 1.0; //TODO s/b specified incoming
             
-            if (FitAlgorithm.RLD.equals(m_fitAlgorithm) || FitAlgorithm.RLD_LMA.equals(m_fitAlgorithm)) {
+            if (FitAlgorithm.SLIMCURVE_RLD.equals(m_fitAlgorithm) || FitAlgorithm.SLIMCURVE_RLD_LMA.equals(m_fitAlgorithm)) {
                 // RLD or triple integral fit
 
                 // use arrays to pass double by reference
@@ -347,13 +356,14 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                             stop,
                             instrumentResponse,
                             nInstrumentResponse,
+                            noise,
                             data.getSig(),
                             z,
                             a,
                             tau,
                             data.getYFitted(),
                             chiSquare,
-                            chiSquareTarget
+                            data.getChiSquareTarget()
                             );
 
                     // set outgoing parameters, unless they are fixed
@@ -370,7 +380,7 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                 }
             }
 
-            if (FitAlgorithm.LMA.equals(m_fitAlgorithm) || FitAlgorithm.RLD_LMA.equals(m_fitAlgorithm)) {
+            if (FitAlgorithm.SLIMCURVE_LMA.equals(m_fitAlgorithm) || FitAlgorithm.SLIMCURVE_RLD_LMA.equals(m_fitAlgorithm)) {
                 // LMA fit
                 for (ICurveFitData data: dataArray) {
                     int nInstrumentResponse = 0;
@@ -384,13 +394,15 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                             stop,
                             m_instrumentResponse,
                             nInstrumentResponse,
+                            noise,
                             data.getSig(),
                             data.getParams(),
                             toIntArray(m_free),
                             data.getParams().length - 1,
                             data.getYFitted(),
                             chiSquare,
-                            chiSquareTarget
+                            data.getChiSquareTarget(),
+                            chiSquareDelta
                             );
                 }
             }

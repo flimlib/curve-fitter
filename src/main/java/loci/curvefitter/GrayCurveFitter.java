@@ -89,7 +89,7 @@ public class GrayCurveFitter extends AbstractCurveFitter {
         // portion to be fitted and specify an initial x.
         //TODO ARG August use initial X of 0.
 
-        if (FitAlgorithm.RLD.equals(m_fitAlgorithm)) {
+        if (FitAlgorithm.SLIMCURVE_RLD.equals(m_fitAlgorithm)) {
             float xincr = (float) m_xInc;
             int fitStart = start;
             int fitEnd = stop;

@@ -40,26 +40,35 @@ package loci.curvefitter;
  * @author Aivar Grislis
  */
 public interface ICurveFitter {
-    
+
+    /**
+     * Specifies fitting region.
+     */
+    public static enum FitRegion {
+        SUMMED, ROI, POINT, EACH
+    }
+
     /**
      * Specifies fitting algorithm.
+     * 
      */
-    public enum FitAlgorithm {
-        RLD, LMA, RLD_LMA
+    public static enum FitAlgorithm {
+       JAOLHO, SLIMCURVE_RLD, SLIMCURVE_LMA, SLIMCURVE_RLD_LMA
     }
+    // was RLD, LMA, RLD_LMA
     
     /**
      * Specifies curves that this fits.
      */
-    public enum FitFunction {
+    public static enum FitFunction {
         SINGLE_EXPONENTIAL, DOUBLE_EXPONENTIAL, TRIPLE_EXPONENTIAL, STRETCHED_EXPONENTIAL
     }
     
     /**
      * Specifies noise model for fit.
      */
-    public enum NoiseModel {
-        GAUSSIAN_FIT, POISSON_FIT, POISSON_DATA, MAXIMUM_LIKELIHOOD
+    public static enum NoiseModel {
+        CONST, GIVEN, POISSON_DATA, POISSON_FIT, GAUSSIAN_FIT, MAXIMUM_LIKELIHOOD
     }
 
     /**
