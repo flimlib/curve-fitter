@@ -188,7 +188,6 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
     public int fitData(ICurveFitData[] dataArray, int start, int stop) {
         int returnValue = 0;
         int noise = getNoiseModel().ordinal();
-        System.out.println("noise is " + noise);
         
         //TODO temporary
         double chiSquareDelta = 0.0;
@@ -203,7 +202,7 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                     
                     // look for library on path
                     try {
-                        IJ.log("Using JNA");
+                        System.out.println("Using JNA");
                         s_library = (CLibrary) Native.loadLibrary("slim-curve-1.0-SNAPSHOT", CLibrary.class);
                         s_libraryLoaded = true;
                         s_libraryOnPath = true;
@@ -217,7 +216,7 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
 
                 if (!s_libraryLoaded) {
                     // look for library in jar, using JNI
-                    IJ.log("Using JNI");
+                    System.out.println("Using JNI");
                     s_libraryLoaded = NativeLibraryUtil.loadNativeLibrary(this.getClass(), "slim-curve");
                 }
             }
