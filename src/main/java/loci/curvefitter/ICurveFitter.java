@@ -164,7 +164,7 @@ public interface ICurveFitter {
      *
      * @param response array of data
      */
-    public void setInstrumentResponse(double response[]);
+    public void setInstrumentResponse(double response[]); 
 
     /**
      * Do the fit.
@@ -172,15 +172,5 @@ public interface ICurveFitter {
      * @param data array of data to fit
      * @return status code
      */
-    public int fitData(ICurveFitData[] data);
-
-    /**
-     * Do the fit.
-     *
-     * @param data array of data to fit
-     * @param start first index to fit
-     * @param stop last index to fit (inclusive)
-     * @return status code
-     */
-    public int fitData(ICurveFitData[] data, int start, int stop); 
+    public int fitData(ICurveFitData[] data); 
 }

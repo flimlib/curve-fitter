@@ -45,7 +45,9 @@ import jaolho.data.lma.LMAFunction;
 public class JaolhoCurveFitter extends AbstractCurveFitter {
 
   @Override
-  public int fitData(ICurveFitData[] dataArray, int start, int stop) {
+  public int fitData(ICurveFitData[] dataArray) {
+    int start = dataArray[0].getTransFitStartIndex();
+    int stop = dataArray[0].getTransEndIndex();
     int goodPixels = 0;
     int badPixels = 0;
     double[][] lmaData;

@@ -55,7 +55,9 @@ public class MarkwardtCurveFitter extends AbstractCurveFitter {
   }
 
   @Override
-  public int fitData(ICurveFitData[] dataArray, int start, int stop) {
+  public int fitData(ICurveFitData[] dataArray) {
+    int start = dataArray[0].getTransFitStartIndex();
+    int stop = dataArray[0].getTransEndIndex();
     CLibrary lib = (CLibrary) Native.loadLibrary("Markwardt", CLibrary.class);
 
     for (ICurveFitData data: dataArray) {

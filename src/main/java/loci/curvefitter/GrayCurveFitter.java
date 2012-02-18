@@ -81,8 +81,11 @@ public class GrayCurveFitter extends AbstractCurveFitter {
     }
 
     @Override
-    public int fitData(ICurveFitData[] dataArray, int start, int stop) {
+    public int fitData(ICurveFitData[] dataArray) {
         CLibrary lib = (CLibrary) Native.loadLibrary("GrayCode", CLibrary.class);
+        
+        int start = dataArray[0].getTransFitStartIndex();
+        int stop = dataArray[0].getTransEndIndex();
 
         //TODO ARG since initial x = fit_start * xincr we have to supply the unused portion of y[] before fit_start.
         // if this data were already premassaged it might be better to get rid of fit_start & _end, just give the

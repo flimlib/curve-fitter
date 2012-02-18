@@ -159,6 +159,92 @@ public interface ICurveFitData {
     public void setYFitted(double yFit[]);
 
     /**
+     * Gets start index in transient.
+     * 
+     * @return 
+     */
+    public int getTransStartIndex();
+    
+    /**
+     * Sets start index in transient.
+     * 
+     * @param transStartIndex 
+     */
+    public void setTransStartIndex(int transStartIndex);
+    
+    /**
+     * Gets fitting start index in transient.
+     * @return 
+     */
+    public int getTransFitStartIndex();
+    
+    /**
+     * Sets fitting start index in transient.
+     * 
+     * @param transFitStartIndex 
+     */
+    public void setTransFitStartIndex(int transFitStartIndex);
+    
+    /**
+     * Gets estimate fitting start index in transient.
+     * 
+     * This is a TRI2 compatiblity wrinkle.  The RLD estimate before a LMA is
+     * handled oddly.
+     * 
+     * @return 
+     */
+    public int getTransEstimateStartIndex();
+    
+    /**
+     * Sets estimate fitting start index in transient.
+     * 
+     * This is a TRI2 compatibility wrinkle.  The RLD estimate before a LMA is
+     * handled oddly.
+     * 
+     * @param transEstimateStartIndex 
+     */
+    public void setTransEstimateStartIndex(int transEstimateStartIndex);
+    
+    /**
+     * Gets end index in transient.
+     * 
+     * @return 
+     */
+    public int getTransEndIndex();
+    
+    /**
+     * Sets end index in transient.
+     * 
+     * @param transEndIndex 
+     */
+    public void setTransEndIndex(int transEndIndex);
+
+    /**
+     * Gets whether to ignore the prompt when using Integral/RLD fitting for an
+     * estimate before a LMA fit.
+     * 
+     * This is a TRI2 compatibility wrinkle.  The RLD estimate before a LMA is
+     * handled oddly.
+     * 
+     * If never set will return false;
+     * 
+     * @return 
+     */
+    public boolean getIgnorePromptForIntegralEstimate();
+
+
+    /**
+     * Sets whether to ignore the prompt when using Integral/RLD fitting for an
+     * estimate before a LMA fit.
+     * 
+     * This is a TRI2 compatibility wrinkle.  The RLD estimate before a LMA is
+     * handled oddly.
+     * 
+     * @param ignore 
+     */
+    public void setIgnorePromptForIntegralEstimate(boolean ignore);
+
+    /**
      * Gets chi square target.
      * 
      * @return targetted chisquare

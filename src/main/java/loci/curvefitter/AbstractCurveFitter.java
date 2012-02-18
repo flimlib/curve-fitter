@@ -125,12 +125,6 @@ public abstract class AbstractCurveFitter implements ICurveFitter {
     }
 
     @Override
-    public int fitData(ICurveFitData[] data) {
-        int nData = data[0].getYCount().length;
-        return fitData(data, 0, nData - 1);
-    }
-
-    @Override
-    public abstract int fitData(ICurveFitData[] data, int start, int stop);
+    public abstract int fitData(ICurveFitData[] data);
 }
 

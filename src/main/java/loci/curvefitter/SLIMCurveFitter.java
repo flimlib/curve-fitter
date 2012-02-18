@@ -185,7 +185,7 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                            );
 
     @Override
-    public int fitData(ICurveFitData[] dataArray, int start, int stop) {
+    public int fitData(ICurveFitData[] dataArray) {
         int returnValue = 0;
         int noise = getNoiseModel().ordinal();
         
@@ -265,6 +265,13 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                         nInstrumentResponse = instrumentResponse.length;
                     }
                     
+                    // set start and stop
+                    int start = data.getTransFitStartIndex();
+                    if (FitAlgorithm.SLIMCURVE_RLD_LMA.equals(m_fitAlgorithm)) {
+                        start = data.getTransEstimateStartIndex();
+                    }
+                    int stop = data.getTransEndIndex();
+                    
                     returnValue = s_library.RLD_fit(
                             m_xInc,
                             data.getYCount(),
@@ -292,6 +299,7 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                     if (free[2]) {
                         data.getParams()[3] = tau.getValue();
                     }
+                    System.out.println("after RLD A " + a.getValue() + " T " + tau.getValue() + " Z " + z.getValue());
                 }
             }
             
@@ -302,6 +310,13 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                     if (null != m_instrumentResponse) {
                         nInstrumentResponse = m_instrumentResponse.length;
                     }
+                    
+                    // set start and stop
+                    int start = data.getTransFitStartIndex();
+                    int stop = data.getTransEndIndex();   
+                    
+                    System.out.println("zInc " + m_xInc + " ndata " + data.getYCount() + " fit start " + start + " fit end " + stop);
+                    System.out.println("noise is " + noise);
                     returnValue = s_library.LMA_fit(
                             m_xInc,
                             data.getYCount(),
@@ -316,9 +331,10 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                             data.getParams().length - 1,
                             data.getYFitted(),
                             chiSquare,
-                            data.getChiSquareTarget(),
-                            data.getChiSquareDelta()
+                            40.5, // data.getChiSquareTarget(),
+                            0.0099999998 // data.getChiSquareDelta()
                             );
+                    System.out.println("chisq " + data.getParams()[0] + " z " + data.getParams()[1] + " a " + data.getParams()[2] + " t " + data.getParams()[3]);
                 }
             }
         }
@@ -349,6 +365,13 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                         nInstrumentResponse = instrumentResponse.length;
                     }
 
+                    // set start and stop
+                    int start = data.getTransFitStartIndex();
+                    if (FitAlgorithm.SLIMCURVE_RLD_LMA.equals(m_fitAlgorithm)) {
+                        start = data.getTransEstimateStartIndex();
+                    }
+                    int stop = data.getTransEndIndex();
+                    
                     returnValue = RLD_fit(m_xInc,
                             data.getYCount(),
                             start,
@@ -386,6 +409,11 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                     if (null != m_instrumentResponse) {
                         nInstrumentResponse = m_instrumentResponse.length;
                     }
+                    
+                    // set start and stop
+                    int start = data.getTransFitStartIndex();
+                    int stop = data.getTransEndIndex();
+                    
                     returnValue = LMA_fit(
                             m_xInc,
                             data.getYCount(),

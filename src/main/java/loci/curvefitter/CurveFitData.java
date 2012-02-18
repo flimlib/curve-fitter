@@ -44,126 +44,186 @@ package loci.curvefitter;
  * @author Aivar Grislis grislis at wisc.edu
  */
 public class CurveFitData implements ICurveFitData {
-    int m_channel;
-    int m_x;
-    int m_y;
-    int m_pixels;
-    double[] m_params;
-    double[] m_yCount;
-    double[] m_sig;
-    double[] m_yFitted;
-    double m_chiSquareTarget;
-    double m_chiSquareDelta;
-    double m_chiSquare;
-    Object m_userData;
+    int _channel;
+    int _x;
+    int _y;
+    int _pixels;
+    double[] _params;
+    double[] _yCount;
+    double[] _sig;
+    double[] _yFitted;
+    int _transStartIndex;
+    int _transFitStartIndex;
+    Integer _transEstimateStartIndex = null;
+    int _transEndIndex;
+    boolean _ignorePromptForIntegralEstimate = false;
+    double _chiSquareTarget;
+    double _chiSquareDelta;
+    double _chiSquare;
+    Object _userData;
 
     @Override
     public int getChannel() {
-        return m_channel;
+        return _channel;
     }
 
     @Override
     public void setChannel(int channel) {
-        m_channel = channel;
+        _channel = channel;
     }
 
     @Override
     public int getX() {
-        return m_x;
+        return _x;
     }
 
     @Override
     public void setX(int x) {
-        m_x = x;
+        _x = x;
     }
 
     @Override
     public int getY() {
-        return m_y;
+        return _y;
     }
 
     @Override
     public void setY(int y) {
-        m_y = y;
+        _y = y;
     }
 
     @Override
     public int getPixels() {
-        return m_pixels;
+        return _pixels;
     }
 
     @Override
     public void setPixels(int pixels) {
-        m_pixels = pixels;
+        _pixels = pixels;
     }
 
     @Override
     public double[] getParams() {
-        return m_params;
+        return _params;
     }
 
     @Override
     public void setParams(double[] params) {
-        m_params = params;
+        _params = params;
     }
 
     @Override
     public double[] getYCount() {
-        return m_yCount;
+        return _yCount;
     }
 
     @Override
     public void setYCount(double yCount[]) {
-        m_yCount = yCount;
+        _yCount = yCount;
     }
 
     @Override
     public double[] getSig() {
-        return m_sig;
+        return _sig;
     }
 
     @Override
     public void setSig(double sig[]) {
-        m_sig = sig;
+        _sig = sig;
     }
 
     @Override
     public double[] getYFitted() {
-        return m_yFitted;
+        return _yFitted;
     }
 
     @Override
     public void setYFitted(double yFitted[]) {
-        m_yFitted = yFitted;
+        _yFitted = yFitted;
+    }
+
+    @Override
+    public int getTransStartIndex() {
+        return _transStartIndex;
+    }
+    
+    @Override
+    public void setTransStartIndex(int transStartIndex) {
+        _transStartIndex = transStartIndex;
+    }
+    
+    @Override
+    public int getTransFitStartIndex() {
+        return _transFitStartIndex;
+    }
+    
+    @Override
+    public void setTransFitStartIndex(int transFitStartIndex) {
+        _transFitStartIndex = transFitStartIndex;
+    }
+    
+    @Override
+    public int getTransEstimateStartIndex() {
+        // if not set, return the regular fit start index
+        int index = _transFitStartIndex;
+        if (null != _transEstimateStartIndex) {
+            index = _transEstimateStartIndex;
+        }
+        return index;
+    }
+    
+    @Override
+    public void setTransEstimateStartIndex(int transEstimateStartIndex) {
+        _transEstimateStartIndex = transEstimateStartIndex;
+    }
+    
+    @Override
+    public int getTransEndIndex() {
+        return _transEndIndex;
+    }
+    
+    @Override
+    public void setTransEndIndex(int transEndIndex) {
+        _transEndIndex = transEndIndex;
+    }
+ 
+    @Override
+    public boolean getIgnorePromptForIntegralEstimate() {
+        return _ignorePromptForIntegralEstimate;
+    }
+
+    @Override
+    public void setIgnorePromptForIntegralEstimate(boolean ignore) {
+        _ignorePromptForIntegralEstimate = ignore;
     }
 
     @Override
     public double getChiSquareTarget() {
-        return m_chiSquareTarget;
+        return _chiSquareTarget;
     }
 
     @Override
     public void setChiSquareTarget(double chiSquareTarget) {
-        m_chiSquareTarget = chiSquareTarget;
+        _chiSquareTarget = chiSquareTarget;
     }
     
     @Override
     public double getChiSquareDelta() {
-        return m_chiSquareDelta;
+        return _chiSquareDelta;
     }
     
     @Override
     public void setChiSquareDelta(double chiSquareDelta) {
-        m_chiSquareDelta = chiSquareDelta;
+        _chiSquareDelta = chiSquareDelta;
     }
     
     @Override
     public double getChiSquare() {
-        return m_chiSquare;
+        return _chiSquare;
     }
 
     @Override
     public void setChiSquare(double chiSquare) {
-        m_chiSquare = chiSquare;
+        _chiSquare = chiSquare;
     }
 }

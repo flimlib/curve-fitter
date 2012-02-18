@@ -121,7 +121,9 @@ public class GrayNRCurveFitter extends AbstractCurveFitter {
 
 
     @Override
-    public int fitData(ICurveFitData[] dataArray, int start, int stop) {
+    public int fitData(ICurveFitData[] dataArray) {
+        int start = dataArray[0].getTransFitStartIndex();
+        int stop = dataArray[0].getTransEndIndex();
         int returnValue = 0;
         if (null == s_library) {
             try {

@@ -54,7 +54,10 @@ import org.akutan.optimization.LMSolver;
 public class AkutanCurveFitter extends AbstractCurveFitter {
 
     @Override
-    public int fitData(ICurveFitData[] dataArray, int start, int stop) {
+    public int fitData(ICurveFitData[] dataArray) {
+        int start = dataArray[0].getTransFitStartIndex();
+        int stop = dataArray[0].getTransEndIndex();
+        
         int length = stop - start + 1;
         DoubleMatrix1D x = new DenseDoubleMatrix1D(length);
         DoubleMatrix1D y = new DenseDoubleMatrix1D(length);
