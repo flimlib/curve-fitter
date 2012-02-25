@@ -234,14 +234,17 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
         //TODO ARG August use initial X of 0.
         
         boolean[] free = m_free.clone();
-        if (FitAlgorithm.SLIMCURVE_RLD.equals(m_fitAlgorithm)) {
-            // pure RLD (versus RLD followed by LMA) has no way to fix
-            // parameters
-            for (int i = 0; i < free.length; ++i) {
+        int numParamFree = 0;
+        for (int i = 0; i < free.length; ++i) {
+            if (free[i]) {
+                ++numParamFree;
+            }
+            // pure RLD (vs RLD followed by LMA) has no way to fix parameters
+            if (FitAlgorithm.SLIMCURVE_RLD.equals(m_fitAlgorithm)) {
                 free[i] = true;
             }
         }
-        
+       
         if (s_libraryOnPath) {
             // JNA version
             DoubleByReference chiSquare = new DoubleByReference();
@@ -267,10 +270,14 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                     
                     // set start and stop
                     int start = data.getTransFitStartIndex();
+                    System.out.println("trans fit start index is " + start);
                     if (FitAlgorithm.SLIMCURVE_RLD_LMA.equals(m_fitAlgorithm)) {
                         start = data.getTransEstimateStartIndex();
+                        System.out.println("trans estimate start index is " + start);
                     }
                     int stop = data.getTransEndIndex();
+                    
+                    int chiSquareAdjust = stop - start - numParamFree;
                     
                     returnValue = s_library.RLD_fit(
                             m_xInc,
@@ -286,10 +293,10 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                             tau,
                             data.getYFitted(),
                             chiSquare,
-                            data.getChiSquareTarget()
+                            data.getChiSquareTarget() * chiSquareAdjust
                             );
                     // set outgoing parameters, unless they are fixed
-                    data.getParams()[0] = chiSquare.getValue();
+                    data.getParams()[0] = chiSquare.getValue() / chiSquareAdjust;
                     if (free[0]) {
                         data.getParams()[1] = z.getValue();
                     }
@@ -313,10 +320,27 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                     
                     // set start and stop
                     int start = data.getTransFitStartIndex();
-                    int stop = data.getTransEndIndex();   
+                    int stop = data.getTransEndIndex();
                     
-                    System.out.println("zInc " + m_xInc + " ndata " + data.getYCount() + " fit start " + start + " fit end " + stop);
+                    int chiSquareAdjust = stop - start - numParamFree;
+                    
+                    System.out.println("xInc " + m_xInc);
+                    System.out.println("yCount length " + data.getYCount().length + " yCount " + data.getYCount()[0] + " " + data.getYCount()[1] + " " + data.getYCount()[2] + " " + data.getYCount()[3] );
+                    System.out.println("start " + start + " stop " + stop);
+                    System.out.println("m_instrumentResponse is " + m_instrumentResponse);
+                    System.out.println("nInstrumentResponse is " + nInstrumentResponse);
                     System.out.println("noise is " + noise);
+                    if (null == data.getSig()) {
+                        System.out.println("sig is null");
+                    }
+                    else {
+                        System.out.println("length of sig is " + data.getSig().length);
+                    }
+                    System.out.println("params " + data.getParams()[0] + " " + data.getParams()[1] + " " + data.getParams()[2]);
+                    System.out.println("m_free " + m_free[0] + " " + m_free[1] + " " + m_free[2]);
+                    System.out.println("data.getParams().length - 1 is " + (data.getParams().length - 1));
+
+                    System.out.println("chisquaretarget is " + data.getChiSquareTarget() * chiSquareAdjust + " delta " + data.getChiSquareDelta());
                     returnValue = s_library.LMA_fit(
                             m_xInc,
                             data.getYCount(),
@@ -331,9 +355,11 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                             data.getParams().length - 1,
                             data.getYFitted(),
                             chiSquare,
-                            40.5, // data.getChiSquareTarget(),
-                            0.0099999998 // data.getChiSquareDelta()
+                            data.getChiSquareTarget() * chiSquareAdjust,
+                            0.0099999998 //data.getChiSquareDelta()
                             );
+                    data.getParams()[0] /= chiSquareAdjust;
+                    System.out.println("chiSqaure array is " + chiSquare.getValue() + " data version is " + data.getParams()[0]);
                     System.out.println("chisq " + data.getParams()[0] + " z " + data.getParams()[1] + " a " + data.getParams()[2] + " t " + data.getParams()[3]);
                 }
             }
@@ -372,6 +398,8 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                     }
                     int stop = data.getTransEndIndex();
                     
+                    int chiSquareAdjust = stop - start - numParamFree;
+                    
                     returnValue = RLD_fit(m_xInc,
                             data.getYCount(),
                             start,
@@ -385,11 +413,11 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                             tau,
                             data.getYFitted(),
                             chiSquare,
-                            data.getChiSquareTarget()
+                            data.getChiSquareTarget() * chiSquareAdjust
                             );
 
                     // set outgoing parameters, unless they are fixed
-                    data.getParams()[0] = chiSquare[0];
+                    data.getParams()[0] = chiSquare[0] / chiSquareAdjust;
                     if (free[0]) {
                         data.getParams()[1] = z[0];
                     }
@@ -414,6 +442,8 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                     int start = data.getTransFitStartIndex();
                     int stop = data.getTransEndIndex();
                     
+                    int chiSquareAdjust = stop - start - numParamFree;
+                    
                     returnValue = LMA_fit(
                             m_xInc,
                             data.getYCount(),
@@ -428,9 +458,11 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                             data.getParams().length - 1,
                             data.getYFitted(),
                             chiSquare,
-                            data.getChiSquareTarget(),
+                            data.getChiSquareTarget() * chiSquareAdjust,
                             chiSquareDelta
                             );
+                    
+                    data.getParams()[0] /= chiSquareAdjust;
                 }
             }
         }
