@@ -262,7 +262,7 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                     z.setValue(  data.getParams()[1]);
                     
                     // get IRF curve, if any
-                    double[] instrumentResponse = getInstrumentResponse(data.getPixels());
+                    double[] instrumentResponse = m_instrumentResponse; //TODO ARG was scaling: getInstrumentResponse(data.getPixels());
                     int nInstrumentResponse = 0;
                     if (null != instrumentResponse) {
                         nInstrumentResponse = instrumentResponse.length;
@@ -296,7 +296,7 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                             data.getChiSquareTarget() * chiSquareAdjust
                             );
                     // set outgoing parameters, unless they are fixed
-                    data.getParams()[0] = chiSquare.getValue() / chiSquareAdjust;
+                    data.getParams()[0] = chiSquare.getValue(); //TODO ARG TRI2 / chiSquareAdjust; take non-reduced chisquare target and return non-reduced chisquare; this s/b fixed elsewhere
                     if (free[0]) {
                         data.getParams()[1] = z.getValue();
                     }
@@ -358,7 +358,7 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                             data.getChiSquareTarget() * chiSquareAdjust,
                             0.0099999998 //data.getChiSquareDelta()
                             );
-                    data.getParams()[0] /= chiSquareAdjust;
+                    //data.getParams()[0]; //TODO ARG TRI2 don't make it reduced chisq /= chiSquareAdjust;
                     System.out.println("chiSqaure array is " + chiSquare.getValue() + " data version is " + data.getParams()[0]);
                     System.out.println("chisq " + data.getParams()[0] + " z " + data.getParams()[1] + " a " + data.getParams()[2] + " t " + data.getParams()[3]);
                 }
