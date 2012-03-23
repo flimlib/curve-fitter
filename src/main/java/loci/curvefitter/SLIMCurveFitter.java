@@ -243,232 +243,258 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
             }
         }
         
-        if (s_libraryOnPath) {
-            // JNA version
-            DoubleByReference chiSquare = new DoubleByReference();
+        // use array to pass double by reference
+        double[] chiSquare = new double[1];
             
-            if (FitAlgorithm.SLIMCURVE_RLD.equals(m_fitAlgorithm) || FitAlgorithm.SLIMCURVE_RLD_LMA.equals(m_fitAlgorithm)) {
-                // RLD or triple integral fit
-                DoubleByReference z = new DoubleByReference();
-                DoubleByReference a = new DoubleByReference();
-                DoubleByReference tau = new DoubleByReference();
+        if (FitAlgorithm.SLIMCURVE_RLD.equals(m_fitAlgorithm) || FitAlgorithm.SLIMCURVE_RLD_LMA.equals(m_fitAlgorithm)) {
+            // RLD or triple integral fit
 
-                for (ICurveFitData data: dataArray) {
-                    // grab incoming parameters
-                    a.setValue(  data.getParams()[2]);
-                    tau.setValue(data.getParams()[3]);
-                    z.setValue(  data.getParams()[1]);
-                    
-                    // get IRF curve, if any
-                    double[] instrumentResponse = m_instrumentResponse; //TODO ARG was scaling: getInstrumentResponse(data.getPixels());
-                    int nInstrumentResponse = 0;
-                    if (null != instrumentResponse) {
-                        nInstrumentResponse = instrumentResponse.length;
-                    }
-                    
-                    // set start and stop
-                    int start = data.getAdjustedDataStartIndex();
-                    if (FitAlgorithm.SLIMCURVE_RLD_LMA.equals(m_fitAlgorithm)) {
-                        start = data.getTransEstimateStartIndex();
-                    }
-                    int stop = data.getAdjustedTransEndIndex();
-                    
-                    int chiSquareAdjust = stop - start - numParamFree;
-                    
-                    returnValue = s_library.RLD_fit(
-                            m_xInc,
-                            data.getAdjustedYCount(),
-                            start,
-                            stop,
-                            instrumentResponse,
-                            nInstrumentResponse,
-                            noise,
-                            data.getSig(),
-                            z,
-                            a,
-                            tau,
-                            data.getYFitted(),
-                            chiSquare,
-                            data.getChiSquareTarget() * chiSquareAdjust
-                            );
-                    // set outgoing parameters, unless they are fixed
-                    data.getParams()[0] = chiSquare.getValue(); //TODO ARG TRI2 / chiSquareAdjust; take non-reduced chisquare target and return non-reduced chisquare; this s/b fixed elsewhere
-                    if (free[0]) {
-                        data.getParams()[1] = z.getValue();
-                    }
-                    if (free[1]) {
-                        data.getParams()[2] = a.getValue();
-                    }
-                    if (free[2]) {
-                        data.getParams()[3] = tau.getValue();
-                    }
+            // use arrays to pass double by reference
+            double[] z   = new double[1];
+            double[] a   = new double[1];
+            double[] tau = new double[1];
+
+            for (ICurveFitData data: dataArray) {
+                // grab incoming parameters
+                a[0]   = data.getParams()[2];
+                tau[0] = data.getParams()[3];
+                z[0]   = data.getParams()[1];
+
+                // get IRF curve, if any
+                double[] instrumentResponse = getInstrumentResponse(data.getPixels());
+                int nInstrumentResponse = 0;
+                if (null != instrumentResponse) {
+                    nInstrumentResponse = instrumentResponse.length;
                 }
-            }
-            
-            if (FitAlgorithm.SLIMCURVE_LMA.equals(m_fitAlgorithm) || FitAlgorithm.SLIMCURVE_RLD_LMA.equals(m_fitAlgorithm)) {
-                // LMA fit
-                for (ICurveFitData data: dataArray) {
-                    int nInstrumentResponse = 0;
-                    if (null != m_instrumentResponse) {
-                        nInstrumentResponse = m_instrumentResponse.length;
-                    }
-                    
-                    // set start and stop
-                    int start = data.getAdjustedDataStartIndex();
-                    int stop  = data.getAdjustedTransEndIndex();
-                    
-                    int chiSquareAdjust = stop - start - numParamFree;
-                    
-                    returnValue = s_library.LMA_fit(
-                            m_xInc,
-                            data.getAdjustedYCount(),
-                            start,
-                            stop,
-                            m_instrumentResponse,
-                            nInstrumentResponse,
-                            noise,
-                            data.getSig(),
-                            data.getParams(),
-                            toIntArray(m_free),
-                            data.getParams().length - 1,
-                            data.getYFitted(),
-                            chiSquare,
-                            data.getChiSquareTarget() * chiSquareAdjust,
-                            data.getChiSquareDelta()
-                            );
+
+                // set start and stop
+                int start = data.getAdjustedDataStartIndex();
+                if (FitAlgorithm.SLIMCURVE_RLD_LMA.equals(m_fitAlgorithm)) {
+                    start = data.getTransEstimateStartIndex();
                 }
-            }
-        }
-        else {
-            // JNI version
-
-            // use array to pass double by reference
-            double[] chiSquare = new double[1];
-            
-            if (FitAlgorithm.SLIMCURVE_RLD.equals(m_fitAlgorithm) || FitAlgorithm.SLIMCURVE_RLD_LMA.equals(m_fitAlgorithm)) {
-                // RLD or triple integral fit
-
-                // use arrays to pass double by reference
-                double[] z = new double[1];
-                double[] a = new double[1];
-                double[] tau = new double[1];
-
-                for (ICurveFitData data: dataArray) {
-                    // grab incoming parameters
-                    a[0] = data.getParams()[2];
-                    tau[0] = data.getParams()[3];
-                    z[0] = data.getParams()[1];
-
-                    // get IRF curve, if any
-                    double[] instrumentResponse = getInstrumentResponse(data.getPixels());
-                    int nInstrumentResponse = 0;
-                    if (null != instrumentResponse) {
-                        nInstrumentResponse = instrumentResponse.length;
-                    }
-
-                    // set start and stop
-                    int start = data.getAdjustedDataStartIndex();
-                    if (FitAlgorithm.SLIMCURVE_RLD_LMA.equals(m_fitAlgorithm)) {
-                        start = data.getTransEstimateStartIndex();
-                    }
-                    int stop = data.getAdjustedTransEndIndex();
+                int stop = data.getAdjustedTransEndIndex();
                     
-                    int chiSquareAdjust = stop - start - numParamFree;
+                int chiSquareAdjust = stop - start - numParamFree;
                     
-                    returnValue = RLD_fit(m_xInc,
-                            data.getAdjustedYCount(),
-                            start,
-                            stop,
-                            instrumentResponse,
-                            nInstrumentResponse,
-                            noise,
-                            data.getSig(),
-                            z,
-                            a,
-                            tau,
-                            data.getYFitted(),
-                            chiSquare,
-                            data.getChiSquareTarget() * chiSquareAdjust
-                            );
+                returnValue = doRLDFit(
+                        m_xInc,
+                        data.getAdjustedYCount(),
+                        start,
+                        stop,
+                        instrumentResponse,
+                        nInstrumentResponse,
+                        noise,
+                        data.getSig(),
+                        z,
+                        a,
+                        tau,
+                        data.getYFitted(),
+                        chiSquare,
+                        data.getChiSquareTarget() * chiSquareAdjust
+                        );
 
-                    // set outgoing parameters, unless they are fixed
-                    data.getParams()[0] = chiSquare[0] / chiSquareAdjust;
-                    if (free[0]) {
-                        data.getParams()[1] = z[0];
-                    }
-                    if (free[1]) {
-                        data.getParams()[2] = a[0];
-                    }
-                    if (free[2]) {
-                        data.getParams()[3] = tau[0];
-                    }
+                // set outgoing parameters, unless they are fixed
+                data.getParams()[0] = chiSquare[0] / chiSquareAdjust;
+                if (free[0]) {
+                    data.getParams()[1] = z[0];
                 }
-            }
-
-            if (FitAlgorithm.SLIMCURVE_LMA.equals(m_fitAlgorithm) || FitAlgorithm.SLIMCURVE_RLD_LMA.equals(m_fitAlgorithm)) {
-                // LMA fit
-                for (ICurveFitData data: dataArray) {
-                    int nInstrumentResponse = 0;
-                    if (null != m_instrumentResponse) {
-                        nInstrumentResponse = m_instrumentResponse.length;
-                    }
-                    
-                    // set start and stop
-                    int start = data.getAdjustedDataStartIndex();
-                    int stop  = data.getAdjustedTransEndIndex();
-                    
-                    int chiSquareAdjust = stop - start - numParamFree;
-                    
-                    returnValue = LMA_fit(
-                            m_xInc,
-                            data.getAdjustedYCount(),
-                            start,
-                            stop,
-                            m_instrumentResponse,
-                            nInstrumentResponse,
-                            noise,
-                            data.getSig(),
-                            data.getParams(),
-                            toIntArray(m_free),
-                            data.getParams().length - 1,
-                            data.getYFitted(),
-                            chiSquare,
-                            data.getChiSquareTarget() * chiSquareAdjust,
-                            chiSquareDelta
-                            );
-                    
-                    data.getParams()[0] /= chiSquareAdjust;
+                if (free[1]) {
+                    data.getParams()[2] = a[0];
+                }
+                if (free[2]) {
+                    data.getParams()[3] = tau[0];
                 }
             }
         }
 
-        //TODO error return deserves much more thought!!  Just returning the last value here!!
+        if (FitAlgorithm.SLIMCURVE_LMA.equals(m_fitAlgorithm) || FitAlgorithm.SLIMCURVE_RLD_LMA.equals(m_fitAlgorithm)) {
+            // LMA fit
+            for (ICurveFitData data: dataArray) {
+                int nInstrumentResponse = 0;
+                if (null != m_instrumentResponse) {
+                    nInstrumentResponse = m_instrumentResponse.length;
+                }
+                    
+                // set start and stop
+                int start = data.getAdjustedDataStartIndex();
+                int stop  = data.getAdjustedTransEndIndex();
+                    
+                int chiSquareAdjust = stop - start - numParamFree;
+                    
+                returnValue = doLMAFit(
+                        m_xInc,
+                        data.getAdjustedYCount(),
+                        start,
+                        stop,
+                        m_instrumentResponse,
+                        nInstrumentResponse,
+                        noise,
+                        data.getSig(),
+                        data.getParams(),
+                        toIntArray(m_free),
+                        data.getParams().length - 1,
+                        data.getYFitted(),
+                        chiSquare,
+                        data.getChiSquareTarget() * chiSquareAdjust,
+                        chiSquareDelta
+                        );
+                    
+                data.getParams()[0] /= chiSquareAdjust;
+            }
+        }
+
+        //TODO ARG error value deserves more thought; just returning last value
         return returnValue;
 
     }
+ 
+    /*
+     * Does the RLD fit according to whether the library is accessed via JNA or
+     * JNI.
+     */
+    private int doRLDFit(double xInc,
+                         double y[],
+                         int fitStart,
+                         int fitEnd,
+                         double instr[],
+                         int nInstr,
+                         int noise,
+                         double sig[],
+                         double z[],
+                         double a[],
+                         double tau[],
+                         double fitted[],
+                         double chiSquare[],
+                         double chiSquareTarget
+                         )
+    {
+        int returnValue = 0;
+        if (s_libraryOnPath) {
+            // JNA version
+            
+            DoubleByReference zRef         = new DoubleByReference(z[0]);
+            DoubleByReference aRef         = new DoubleByReference(a[0]);
+            DoubleByReference tauRef       = new DoubleByReference(tau[0]);
+            DoubleByReference chiSquareRef = new DoubleByReference(chiSquare[0]);
+            
+            returnValue = s_library.RLD_fit(
+                    xInc,
+                    y,
+                    fitStart,
+                    fitEnd,
+                    instr,
+                    nInstr,
+                    noise,
+                    sig,
+                    zRef,
+                    aRef,
+                    tauRef,
+                    fitted,
+                    chiSquareRef,
+                    chiSquareTarget);
+            
+            z[0]         = zRef.getValue();
+            a[0]         = aRef.getValue();
+            tau[0]       = tauRef.getValue();
+            chiSquare[0] = chiSquareRef.getValue();
+        }
+        else {
+            // JNI version
+            
+            returnValue = RLD_fit(
+                    xInc,
+                    y,
+                    fitStart,
+                    fitEnd,
+                    instr,
+                    nInstr,
+                    noise,
+                    sig,
+                    z,
+                    z,
+                    tau,
+                    fitted,
+                    chiSquare,
+                    chiSquareTarget);
+        }
+        return returnValue;
+    }
+ 
+    /*
+     * Does the LMA fit according to whether the library is accessed via JNA or
+     * JNI.
+     */
+    private int doLMAFit(double xInc,
+                         double y[],
+                         int fitStart,
+                         int fitEnd,
+                         double instr[],
+                         int n_instr,
+                         int noise,
+                         double sig[],
+                         double param[],
+                         int paramFree[],
+                         int nParam,
+                         double fitted[],
+                         double chiSquare[],
+                         double chiSquareTarget,
+                         double chiSquareDelta
+                         )
+    {
+        int returnValue = 0;
+        
+        if (s_libraryOnPath) {
+            // JNA version
+            
+            DoubleByReference chiSquareRef = new DoubleByReference(chiSquare[0]);
+            
+            returnValue = s_library.LMA_fit(
+                    xInc,
+                    y,
+                    fitStart,
+                    fitEnd,
+                    instr,
+                    n_instr,
+                    noise,
+                    sig,
+                    param,
+                    paramFree,
+                    nParam,
+                    fitted,
+                    chiSquareRef,
+                    chiSquareTarget,
+                    chiSquareDelta);
+            
+            chiSquare[0] = chiSquareRef.getValue();
+        }
+        else {
+            // JNI version
+            
+            returnValue = LMA_fit(
+                    xInc,
+                    y,
+                    fitStart,
+                    fitEnd,
+                    instr,
+                    n_instr,
+                    noise,
+                    sig,
+                    param,
+                    paramFree,
+                    nParam,
+                    fitted,
+                    chiSquare,
+                    chiSquareTarget,
+                    chiSquareDelta);
+        }
+        return returnValue;  
+    }
 
-    int[] toIntArray(boolean[] booleanArray) {
+    private int[] toIntArray(boolean[] booleanArray) {
         int intArray[] = new int[booleanArray.length];
         for (int i = 0; i < booleanArray.length; ++i) {
             intArray[i] = (booleanArray[i] ? 1 : 0);
         }
         return intArray;
     }
-
-    double[] floatToDouble(float[] f) {
-        double d[] = new double[f.length];
-        for (int i = 0; i < f.length; ++i) {
-            d[i] = f[i];
-        }
-        return d;
-    }
-
-    float[] doubleToFloat(double[] d) {
-        float f[] = new float[d.length];
-        for (int i = 0; i < d.length; ++i) {
-            f[i] = (float) d[i];
-        }
-        return f;
-    }
-
 }
