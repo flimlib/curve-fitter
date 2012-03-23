@@ -124,6 +124,13 @@ public interface ICurveFitData {
     public double[] getYCount();
 
     /**
+     * Get input data for the fit, starting with start index.  Input to fit only.
+     * 
+     * @return array of data
+     */
+    public double[] getAdjustedYCount();
+
+    /**
      * Set input data for the fit.  Input to fit only.
      *
      * @param yCount array of data
@@ -174,16 +181,24 @@ public interface ICurveFitData {
     
     /**
      * Gets fitting start index in transient.
+     * 
      * @return 
      */
-    public int getTransFitStartIndex();
+    public int getDataStartIndex();
+
+    /**
+     * Gets fitting start index adjusted for transient start.
+     * 
+     * @return 
+     */
+    public int getAdjustedDataStartIndex();
     
     /**
      * Sets fitting start index in transient.
      * 
-     * @param transFitStartIndex 
+     * @param dataStartIndex 
      */
-    public void setTransFitStartIndex(int transFitStartIndex);
+    public void setDataStartIndex(int dataStartIndex);
     
     /**
      * Gets estimate fitting start index in transient.
@@ -193,6 +208,7 @@ public interface ICurveFitData {
      * 
      * @return 
      */
+    @Deprecated
     public int getTransEstimateStartIndex();
     
     /**
@@ -203,6 +219,7 @@ public interface ICurveFitData {
      * 
      * @param transEstimateStartIndex 
      */
+    @Deprecated
     public void setTransEstimateStartIndex(int transEstimateStartIndex);
     
     /**
@@ -211,6 +228,13 @@ public interface ICurveFitData {
      * @return 
      */
     public int getTransEndIndex();
+
+    /**
+     * Gets end index in transient adjusted for transient start.
+     * 
+     * @return 
+     */
+    public int getAdjustedTransEndIndex();
     
     /**
      * Sets end index in transient.
@@ -230,6 +254,7 @@ public interface ICurveFitData {
      * 
      * @return 
      */
+    @Deprecated
     public boolean getIgnorePromptForIntegralEstimate();
 
 
@@ -242,6 +267,7 @@ public interface ICurveFitData {
      * 
      * @param ignore 
      */
+    @Deprecated
     public void setIgnorePromptForIntegralEstimate(boolean ignore);
 
     /**

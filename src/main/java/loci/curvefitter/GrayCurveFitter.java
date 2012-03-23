@@ -84,7 +84,7 @@ public class GrayCurveFitter extends AbstractCurveFitter {
     public int fitData(ICurveFitData[] dataArray) {
         CLibrary lib = (CLibrary) Native.loadLibrary("GrayCode", CLibrary.class);
         
-        int start = dataArray[0].getTransFitStartIndex();
+        int start = dataArray[0].getDataStartIndex();
         int stop = dataArray[0].getTransEndIndex();
 
         //TODO ARG since initial x = fit_start * xincr we have to supply the unused portion of y[] before fit_start.

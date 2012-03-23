@@ -55,7 +55,7 @@ public class AkutanCurveFitter extends AbstractCurveFitter {
 
     @Override
     public int fitData(ICurveFitData[] dataArray) {
-        int start = dataArray[0].getTransFitStartIndex();
+        int start = dataArray[0].getDataStartIndex();
         int stop = dataArray[0].getTransEndIndex();
         
         int length = stop - start + 1;

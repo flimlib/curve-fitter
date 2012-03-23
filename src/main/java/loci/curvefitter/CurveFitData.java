@@ -116,6 +116,16 @@ public class CurveFitData implements ICurveFitData {
     public double[] getYCount() {
         return _yCount;
     }
+    
+    @Override
+    public double[] getAdjustedYCount() {
+        int size = _transEndIndex - _transStartIndex;
+        double[] adjusted = new double[size];
+        for (int i = 0; i < size; ++i) {
+            adjusted[i] = _yCount[i + _transStartIndex];
+        }
+        return adjusted;
+    }
 
     @Override
     public void setYCount(double yCount[]) {
@@ -153,12 +163,17 @@ public class CurveFitData implements ICurveFitData {
     }
     
     @Override
-    public int getTransFitStartIndex() {
+    public int getDataStartIndex() {
         return _transFitStartIndex;
     }
     
     @Override
-    public void setTransFitStartIndex(int transFitStartIndex) {
+    public int getAdjustedDataStartIndex() {
+        return _transFitStartIndex - _transStartIndex;
+    }
+    
+    @Override
+    public void setDataStartIndex(int transFitStartIndex) {
         _transFitStartIndex = transFitStartIndex;
     }
     
@@ -180,6 +195,11 @@ public class CurveFitData implements ICurveFitData {
     @Override
     public int getTransEndIndex() {
         return _transEndIndex;
+    }
+    
+    @Override
+    public int getAdjustedTransEndIndex() {
+        return _transEndIndex - _transStartIndex;
     }
     
     @Override
