@@ -77,6 +77,20 @@ public interface ICurveFitter {
     public double DEFAULT_X_INC = 1.0f;
     
     /**
+     * Get fitting estimator.
+     * 
+     * @return fitting estimator
+     */
+    public IFitterEstimator getEstimator();
+    
+    /**
+     * Set fitting estimator.
+     * 
+     * @param fitting estimator
+     */
+    public void setEstimator(IFitterEstimator estimator);
+    
+    /**
      * Get fitting algorithm.
      * 
      * @return fitting algorithm

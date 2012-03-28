@@ -207,7 +207,6 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                     }
                     catch (UnsatisfiedLinkError e) {
                         System.out.println("Library not on path " + e.getMessage());
-                        IJ.log("Library not on path " + e.getMessage());
                     } 
                 }
 
@@ -220,7 +219,7 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
             }
         }
         if (!s_libraryLoaded) {
-            IJ.log("Unable to do fit.");
+            IJ.log("Native library not loaded.  Unable to do fit.");
             return 0;
         }
 
@@ -259,20 +258,35 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                 a[0]   = data.getParams()[2];
                 tau[0] = data.getParams()[3];
                 z[0]   = data.getParams()[1];
-
+                
+                System.out.println("A " + a[0] + " T " + tau[0] + " Z " + z[0]); //TODO ARG in instances when RLD fails the incoming parameters will become the results.
+                a[0] = 100.0;
+                tau[0] = 0.5;
+                z[0] = 0.5;
+                System.out.println("A " + a[0] + " T " + tau[0] + " Z " + z[0]);
+                
                 // get IRF curve, if any
-                double[] instrumentResponse = getInstrumentResponse(data.getPixels());
+                double[] instrumentResponse = null;
                 int nInstrumentResponse = 0;
-                if (null != instrumentResponse) {
-                    nInstrumentResponse = instrumentResponse.length;
+                if (FitAlgorithm.SLIMCURVE_RLD.equals(m_fitAlgorithm)
+                        // for a RLD estimate before a LMA fit may skip prompt
+                        || getEstimator().usePrompt()) {
+                    // do get the prompt
+                    instrumentResponse = getInstrumentResponse(data.getPixels());
+                    if (null != instrumentResponse) {
+                        nInstrumentResponse = instrumentResponse.length;
+                    }
                 }
 
                 // set start and stop
                 int start = data.getAdjustedDataStartIndex();
-                if (FitAlgorithm.SLIMCURVE_RLD_LMA.equals(m_fitAlgorithm)) {
-                    start = data.getTransEstimateStartIndex();
-                }
-                int stop = data.getAdjustedTransEndIndex();
+                int stop  = data.getAdjustedTransEndIndex();
+                
+                // these lines give more TRI2 compatible fit results
+                start = getEstimator().getEstimateStartIndex
+                            (data.getAdjustedYCount(), start, stop);
+                a[0]  = getEstimator().getEstimateA
+                            (a[0], data.getAdjustedYCount(), start, stop);
                     
                 int chiSquareAdjust = stop - start - numParamFree;
                     

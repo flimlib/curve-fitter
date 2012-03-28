@@ -40,12 +40,23 @@ package loci.curvefitter;
  * @author Aivar Grislis grislis at wisc dot edu
  */
 public abstract class AbstractCurveFitter implements ICurveFitter {
+    IFitterEstimator m_estimator = new DummyFitterEstimator();
     FitAlgorithm m_fitAlgorithm;
     FitFunction m_fitFunction;
     NoiseModel m_noiseModel;
     double m_xInc = ICurveFitter.DEFAULT_X_INC;
     boolean[] m_free;
     double[] m_instrumentResponse;
+
+    @Override
+    public IFitterEstimator getEstimator() {
+        return m_estimator;
+    }
+    
+    @Override
+    public void setEstimator(IFitterEstimator estimator) {
+        m_estimator = estimator;
+    }
     
     @Override
     public FitAlgorithm getFitAlgorithm() {

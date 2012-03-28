@@ -201,28 +201,6 @@ public interface ICurveFitData {
     public void setDataStartIndex(int dataStartIndex);
     
     /**
-     * Gets estimate fitting start index in transient.
-     * 
-     * This is a TRI2 compatiblity wrinkle.  The RLD estimate before a LMA is
-     * handled oddly.
-     * 
-     * @return 
-     */
-    @Deprecated
-    public int getTransEstimateStartIndex();
-    
-    /**
-     * Sets estimate fitting start index in transient.
-     * 
-     * This is a TRI2 compatibility wrinkle.  The RLD estimate before a LMA is
-     * handled oddly.
-     * 
-     * @param transEstimateStartIndex 
-     */
-    @Deprecated
-    public void setTransEstimateStartIndex(int transEstimateStartIndex);
-    
-    /**
      * Gets end index in transient.
      * 
      * @return 

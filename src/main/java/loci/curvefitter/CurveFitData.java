@@ -54,7 +54,6 @@ public class CurveFitData implements ICurveFitData {
     double[] _yFitted;
     int _transStartIndex;
     int _transFitStartIndex;
-    Integer _transEstimateStartIndex = null;
     int _transEndIndex;
     boolean _ignorePromptForIntegralEstimate = false;
     double _chiSquareTarget;
@@ -175,21 +174,6 @@ public class CurveFitData implements ICurveFitData {
     @Override
     public void setDataStartIndex(int transFitStartIndex) {
         _transFitStartIndex = transFitStartIndex;
-    }
-    
-    @Override
-    public int getTransEstimateStartIndex() {
-        // if not set, return the regular fit start index
-        int index = _transFitStartIndex;
-        if (null != _transEstimateStartIndex) {
-            index = _transEstimateStartIndex;
-        }
-        return index;
-    }
-    
-    @Override
-    public void setTransEstimateStartIndex(int transEstimateStartIndex) {
-        _transEstimateStartIndex = transEstimateStartIndex;
     }
     
     @Override
