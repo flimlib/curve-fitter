@@ -8,11 +8,12 @@
   <parent>
     <groupId>loci</groupId>
     <artifactId>pom-loci</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <relativePath>../..</relativePath>
   </parent>
 
   <artifactId>curve-fitter</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
 
   <name>Curve Fitter library</name>
   <description>A library for fitting single- or multi-component exponential decay curves to sample data.</description>
