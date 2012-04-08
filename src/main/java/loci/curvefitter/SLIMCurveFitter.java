@@ -425,7 +425,7 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                     noise,
                     sig,
                     z,
-                    z,
+                    a,
                     tau,
                     fitted,
                     chiSquare,
