@@ -53,9 +53,8 @@ public class CurveFitData implements ICurveFitData {
     double[] _sig;
     double[] _yFitted;
     int _transStartIndex;
-    int _transFitStartIndex;
+    int _dataStartIndex;
     int _transEndIndex;
-    boolean _ignorePromptForIntegralEstimate = false;
     double _chiSquareTarget;
     double _chiSquareDelta;
     double _chiSquare;
@@ -163,17 +162,17 @@ public class CurveFitData implements ICurveFitData {
     
     @Override
     public int getDataStartIndex() {
-        return _transFitStartIndex;
+        return _dataStartIndex;
     }
     
     @Override
     public int getAdjustedDataStartIndex() {
-        return _transFitStartIndex - _transStartIndex;
+        return _dataStartIndex - _transStartIndex;
     }
     
     @Override
     public void setDataStartIndex(int transFitStartIndex) {
-        _transFitStartIndex = transFitStartIndex;
+        _dataStartIndex = transFitStartIndex;
     }
     
     @Override
@@ -189,16 +188,6 @@ public class CurveFitData implements ICurveFitData {
     @Override
     public void setTransEndIndex(int transEndIndex) {
         _transEndIndex = transEndIndex;
-    }
- 
-    @Override
-    public boolean getIgnorePromptForIntegralEstimate() {
-        return _ignorePromptForIntegralEstimate;
-    }
-
-    @Override
-    public void setIgnorePromptForIntegralEstimate(boolean ignore) {
-        _ignorePromptForIntegralEstimate = ignore;
     }
 
     @Override
