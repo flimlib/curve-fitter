@@ -23,7 +23,7 @@ public class DummyFitterEstimator implements IFitterEstimator {
     }
 
     @Override
-    public double getEstimateA(double A, double[] yCount, int start, int stop) {
+    public double getEstimateAValue(double A, double[] yCount, int start, int stop) {
         return A;
     } 
 }
