@@ -41,7 +41,6 @@ package loci.curvefitter;
  */
 //TODO fix params
 //TODO num components?
-//TODO SP has int for y data, x c/b int too; double m/b useful for advanced binning
 public interface ICurveFitData {
 
     /**
@@ -156,7 +155,7 @@ public interface ICurveFitData {
      *
      * @return array of fitted data
      */
-    public double[] getYFitted(); //TODO is this efficient for OpenCL???? s/b asynchronous, don't wait for results???
+    public double[] getYFitted();
 
     /**
      * Sets fitted data from the fit.  Output from fit only.
@@ -222,43 +221,16 @@ public interface ICurveFitData {
     public void setTransEndIndex(int transEndIndex);
 
     /**
-     * Gets whether to ignore the prompt when using Integral/RLD fitting for an
-     * estimate before a LMA fit.
-     * 
-     * This is a TRI2 compatibility wrinkle.  The RLD estimate before a LMA is
-     * handled oddly.
-     * 
-     * If never set will return false;
-     * 
-     * @return 
-     */
-    @Deprecated
-    public boolean getIgnorePromptForIntegralEstimate();
-
-
-    /**
-     * Sets whether to ignore the prompt when using Integral/RLD fitting for an
-     * estimate before a LMA fit.
-     * 
-     * This is a TRI2 compatibility wrinkle.  The RLD estimate before a LMA is
-     * handled oddly.
-     * 
-     * @param ignore 
-     */
-    @Deprecated
-    public void setIgnorePromptForIntegralEstimate(boolean ignore);
-
-    /**
      * Gets chi square target.
      * 
-     * @return targetted chisquare
+     * @return targeted chi square
      */
     public double getChiSquareTarget();
     
     /**
      * Sets chi square target
      * 
-     * @param chiSquare targetted chi square
+     * @param chiSquare targeted chi square
      */
     public void setChiSquareTarget(double chiSquareTarget);
 
@@ -279,7 +251,7 @@ public interface ICurveFitData {
     /**
      * Gets fitted chi square.
      * 
-     * @return fitted chisquare
+     * @return fitted chi square
      */
     public double getChiSquare();
     
