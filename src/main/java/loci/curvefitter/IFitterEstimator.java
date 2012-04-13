@@ -38,5 +38,5 @@ public interface IFitterEstimator {
      * @param stop
      * @return initial A estimate
      */
-    public double getEstimateA(double A, double[] yCount, int start, int stop);
+    public double getEstimateAValue(double A, double[] yCount, int start, int stop);
 }
