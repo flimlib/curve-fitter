@@ -285,7 +285,7 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                 // these lines give more TRI2 compatible fit results
                 start = getEstimator().getEstimateStartIndex
                             (data.getAdjustedYCount(), start, stop);
-                a[0]  = getEstimator().getEstimateA
+                a[0]  = getEstimator().getEstimateAValue
                             (a[0], data.getAdjustedYCount(), start, stop);
                     
                 int chiSquareAdjust = stop - start - numParamFree;
@@ -332,6 +332,8 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                 // set start and stop
                 int start = data.getAdjustedDataStartIndex();
                 int stop  = data.getAdjustedTransEndIndex();
+                //TODO ARG should we get a new A here also? better not be
+                // it seems strange this code appears for both RLD and LMA
                     
                 int chiSquareAdjust = stop - start - numParamFree;
                     
