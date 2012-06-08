@@ -332,11 +332,16 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                 // set start and stop
                 int start = data.getAdjustedDataStartIndex();
                 int stop  = data.getAdjustedTransEndIndex();
+                //TODO ARG patch cursors
+                if (start < 0) {
+                    start = 0;
+                }
+                
                 //TODO ARG should we get a new A here also? better not be
                 // it seems strange this code appears for both RLD and LMA
                     
                 int chiSquareAdjust = stop - start - numParamFree;
-                    
+                   
                 returnValue = doLMAFit(
                         m_xInc,
                         data.getAdjustedYCount(),
