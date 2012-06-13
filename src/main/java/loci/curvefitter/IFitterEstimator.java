@@ -4,6 +4,8 @@
  */
 package loci.curvefitter;
 
+import loci.curvefitter.ICurveFitter.FitFunction;
+
 /**
  * This is an interface used when doing a fit with an RLD estimate fit combined
  * with a LMA fit.  It allows for some peculiarities of TRI2.
@@ -39,4 +41,17 @@ public interface IFitterEstimator {
      * @return initial A estimate
      */
     public double getEstimateAValue(double A, double[] yCount, int start, int stop);
+
+    
+    /**
+     * Given an initial estimate of A, tau, and Z sets up the parameters for
+     * further fitting.
+     * 
+     * @param params
+     * @param fitFunction
+     * @param A
+     * @param tau
+     * @param Z
+     */
+    public void adjustEstimatedParams(double[] params, FitFunction fitFunction, double A, double tau, double Z);
 }

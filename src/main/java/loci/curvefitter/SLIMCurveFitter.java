@@ -241,17 +241,15 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                 free[i] = true;
             }
         }
-        
-        // use array to pass double by reference
+               
+        // use arrays to pass double by reference
         double[] chiSquare = new double[1];
-            
+        double[] z         = new double[1];
+        double[] a         = new double[1];
+        double[] tau       = new double[1];
+        
         if (FitAlgorithm.SLIMCURVE_RLD.equals(m_fitAlgorithm) || FitAlgorithm.SLIMCURVE_RLD_LMA.equals(m_fitAlgorithm)) {
             // RLD or triple integral fit
-
-            // use arrays to pass double by reference
-            double[] z   = new double[1];
-            double[] a   = new double[1];
-            double[] tau = new double[1];
 
             for (ICurveFitData data: dataArray) {
                 // grab incoming parameters
@@ -322,6 +320,17 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
         }
 
         if (FitAlgorithm.SLIMCURVE_LMA.equals(m_fitAlgorithm) || FitAlgorithm.SLIMCURVE_RLD_LMA.equals(m_fitAlgorithm)) {
+
+            //TODO ARG the idea of processing many ICurveFitData's in a loop is broken; here and elsewhere
+            
+            // if we are doing an LMA but just did an RLD estimate we may need to
+            //   adjust those monoexponential RLD results to be initial estimates for
+            //   a triexponential LMA fit, for example.
+            if (FitAlgorithm.SLIMCURVE_RLD_LMA.equals(m_fitAlgorithm)) {
+                getEstimator().adjustEstimatedParams
+                            (dataArray[0].getParams(), m_fitFunction, a[0], tau[0], z[0]);
+            }
+            
             // LMA fit
             for (ICurveFitData data: dataArray) {
                 int nInstrumentResponse = 0;
@@ -337,8 +346,7 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                     start = 0;
                 }
                 
-                //TODO ARG should we get a new A here also? better not be
-                // it seems strange this code appears for both RLD and LMA
+                //TODO ARG should we get a new A here also?
                     
                 int chiSquareAdjust = stop - start - numParamFree;
                    
@@ -359,7 +367,7 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                         data.getChiSquareTarget() * chiSquareAdjust,
                         chiSquareDelta
                         );
-                    
+                
                 data.getParams()[0] /= chiSquareAdjust;
             }
         }
