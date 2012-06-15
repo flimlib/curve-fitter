@@ -5,6 +5,7 @@
 package loci.curvefitter;
 
 import loci.curvefitter.ICurveFitter.FitFunction;
+import loci.curvefitter.ICurveFitter.NoiseModel;
 
 /**
  * This is an interface used when doing a fit with an RLD estimate fit combined
@@ -42,6 +43,13 @@ public interface IFitterEstimator {
      */
     public double getEstimateAValue(double A, double[] yCount, int start, int stop);
 
+    /**
+     * TRI2 uses hardcoded noise model.
+     * 
+     * @param noiseModel
+     * @return 
+     */
+    public NoiseModel getEstimateNoiseModel(NoiseModel noiseModel);
     
     /**
      * Given an initial estimate of A, tau, and Z sets up the parameters for

@@ -5,6 +5,7 @@
 package loci.curvefitter;
 
 import loci.curvefitter.ICurveFitter.FitFunction;
+import loci.curvefitter.ICurveFitter.NoiseModel;
 
 /**
  * This is a dummy implementation of the IFitterEstimator interface that turns
@@ -27,6 +28,11 @@ public class DummyFitterEstimator implements IFitterEstimator {
     @Override
     public double getEstimateAValue(double A, double[] yCount, int start, int stop) {
         return A;
+    }
+
+    @Override
+    public NoiseModel getEstimateNoiseModel(NoiseModel noiseModel) {
+        return noiseModel;
     }
     
     @Override

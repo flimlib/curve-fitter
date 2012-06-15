@@ -44,6 +44,8 @@ import ij.IJ;
 
 import imagej.nativelibrary.NativeLibraryUtil;
 
+import loci.curvefitter.ICurveFitter.NoiseModel;
+
 /**
  * This class is a Java wrapper around the SLIMCurve fitting C code.
  *
@@ -187,8 +189,9 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
         int returnValue = 0;
         int noise = getNoiseModel().ordinal();
         
-        //TODO temporary
-        double chiSquareDelta = 0.0;
+        // Corresponds to TRI2 'normal' stopping criteria.  ('strict' is 0.0001
+        //   and 'very strict' is 0.000001.)
+        double chiSquareDelta = 0.01;
 
         // load the native library, if not already loaded
         if (!s_libraryLoaded) {
@@ -281,10 +284,15 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                 int stop  = data.getAdjustedTransEndIndex();
                 
                 // these lines give more TRI2 compatible fit results
-                start = getEstimator().getEstimateStartIndex
-                            (data.getAdjustedYCount(), start, stop);
-                a[0]  = getEstimator().getEstimateAValue
-                            (a[0], data.getAdjustedYCount(), start, stop);
+                int RLDnoise = noise;
+                if (FitAlgorithm.SLIMCURVE_RLD_LMA.equals(m_fitAlgorithm)) {
+                    start = getEstimator().getEstimateStartIndex
+                                (data.getAdjustedYCount(), start, stop);
+                    a[0]  = getEstimator().getEstimateAValue
+                                (a[0], data.getAdjustedYCount(), start, stop);
+                    NoiseModel noiseModel = NoiseModel.values()[noise];
+                    RLDnoise = getEstimator().getEstimateNoiseModel(noiseModel).ordinal();
+                }
                     
                 int chiSquareAdjust = stop - start - numParamFree;
                     
@@ -295,7 +303,7 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                         stop,
                         instrumentResponse,
                         nInstrumentResponse,
-                        noise,
+                        RLDnoise,
                         data.getSig(),
                         z,
                         a,
