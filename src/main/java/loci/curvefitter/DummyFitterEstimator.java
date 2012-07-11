@@ -14,11 +14,6 @@ import loci.curvefitter.ICurveFitter.NoiseModel;
  * @author Aivar Grislis
  */
 public class DummyFitterEstimator implements IFitterEstimator {
-    
-    @Override
-    public boolean usePrompt() {
-        return true;
-    }
 
     @Override
     public int getEstimateStartIndex(double[] yCount, int start, int stop) {

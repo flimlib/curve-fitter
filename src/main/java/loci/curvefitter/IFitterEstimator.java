@@ -16,13 +16,6 @@ import loci.curvefitter.ICurveFitter.NoiseModel;
 public interface IFitterEstimator {
 
     /**
-     * TRI2 does not use a prompt for the initial RLD estimate fit.
-     * 
-     * @return 
-     */
-    public boolean usePrompt();
-
-    /**
      * TRI2 adjusts the start index for the initial RLD estimate.
      * 
      * @param yCount
