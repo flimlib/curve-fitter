@@ -56,10 +56,12 @@ public interface IFitterEstimator {
      * further fitting.
      * 
      * @param params
+     * @param free
      * @param fitFunction
      * @param A
      * @param tau
      * @param Z
      */
-    public void adjustEstimatedParams(double[] params, FitFunction fitFunction, double A, double tau, double Z);
+    public void adjustEstimatedParams(double[] params, boolean[] free,
+            FitFunction fitFunction, double A, double tau, double Z);
 }

@@ -225,31 +225,20 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
             IJ.log("Native library not loaded.  Unable to do fit.");
             return 0;
         }
-
-        //TODO ARG 9/3/10 these issues still need to be addressed:
-
-        //TODO ARG since initial x = fit_start * xincr we have to supply the unused portion of y[] before fit_start.
-        // if this data were already premassaged it might be better to get rid of fit_start & _end, just give the
-        // portion to be fitted and specify an initial x.
-        //TODO ARG August use initial X of 0.
-        
-        boolean[] free = m_free.clone();
-        int numParamFree = 0;
-        for (int i = 0; i < free.length; ++i) {
-            if (free[i]) {
-                ++numParamFree;
-            }
-            // pure RLD (vs RLD followed by LMA) has no way to fix parameters
-            if (FitAlgorithm.SLIMCURVE_RLD.equals(m_fitAlgorithm)) {
-                free[i] = true;
-            }
-        }
                
         // use arrays to pass double by reference
         double[] chiSquare = new double[1];
         double[] z         = new double[1];
         double[] a         = new double[1];
         double[] tau       = new double[1];
+
+        // count number of free parameters
+        int numParamFree = 0;
+        for (boolean free : m_free) {
+            if (free) {
+                ++numParamFree;
+            }
+        }
         
         if (FitAlgorithm.SLIMCURVE_RLD.equals(m_fitAlgorithm) || FitAlgorithm.SLIMCURVE_RLD_LMA.equals(m_fitAlgorithm)) {
             // RLD or triple integral fit
@@ -265,19 +254,6 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                 tau[0] = 0.5;
                 z[0] = 0.5;
                 System.out.println("A " + a[0] + " T " + tau[0] + " Z " + z[0]);
-                
-                // get IRF curve, if any
-                double[] instrumentResponse = null;
-                int nInstrumentResponse = 0;
-                if (FitAlgorithm.SLIMCURVE_RLD.equals(m_fitAlgorithm)
-                        // for a RLD estimate before a LMA fit may skip prompt
-                        || getEstimator().usePrompt()) {
-                    // do get the prompt
-                    instrumentResponse = getInstrumentResponse(data.getPixels());
-                    if (null != instrumentResponse) {
-                        nInstrumentResponse = instrumentResponse.length;
-                    }
-                }
 
                 // set start and stop
                 int start = data.getAdjustedDataStartIndex();
@@ -301,8 +277,8 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                         data.getAdjustedYCount(),
                         start,
                         stop,
-                        instrumentResponse,
-                        nInstrumentResponse,
+                        m_instrumentResponse,
+                        null == m_instrumentResponse ? 0 : m_instrumentResponse.length,
                         RLDnoise,
                         data.getSig(),
                         z,
@@ -312,16 +288,12 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                         chiSquare,
                         data.getChiSquareTarget() * chiSquareAdjust
                         );
-
-                // set outgoing parameters, unless they are fixed
-                data.getParams()[0] = chiSquare[0] / chiSquareAdjust;
-                if (free[0]) {
+                
+                if (FitAlgorithm.SLIMCURVE_RLD.equals(m_fitAlgorithm)) {
+                    // set outgoing parameters; note m_free ignored here
+                    data.getParams()[0] = chiSquare[0] / chiSquareAdjust;
                     data.getParams()[1] = z[0];
-                }
-                if (free[1]) {
                     data.getParams()[2] = a[0];
-                }
-                if (free[2]) {
                     data.getParams()[3] = tau[0];
                 }
             }
@@ -336,23 +308,19 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
             //   a triexponential LMA fit, for example.
             if (FitAlgorithm.SLIMCURVE_RLD_LMA.equals(m_fitAlgorithm)) {
                 getEstimator().adjustEstimatedParams
-                            (dataArray[0].getParams(), m_fitFunction, a[0], tau[0], z[0]);
+                            (dataArray[0].getParams(), m_free, m_fitFunction, a[0], tau[0], z[0]);
             }
             
             // LMA fit
             for (ICurveFitData data: dataArray) {
-                int nInstrumentResponse = 0;
-                if (null != m_instrumentResponse) {
-                    nInstrumentResponse = m_instrumentResponse.length;
-                }
                     
                 // set start and stop
                 int start = data.getAdjustedDataStartIndex();
                 int stop  = data.getAdjustedTransEndIndex();
-                //TODO ARG patch cursors
-                if (start < 0) {
-                    start = 0;
-                }
+             //TODO ARG patch cursors; alleviates a bug elsewhere; FIX this
+             if (start < 0) {
+                 start = 0;
+             }
                 
                 //TODO ARG should we get a new A here also?
                     
@@ -364,7 +332,7 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                         start,
                         stop,
                         m_instrumentResponse,
-                        nInstrumentResponse,
+                        null == m_instrumentResponse ? 0 : m_instrumentResponse.length,
                         noise,
                         data.getSig(),
                         data.getParams(),
@@ -380,7 +348,7 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
             }
         }
 
-        //TODO ARG error value deserves more thought; just returning last value
+        //TODO ARG error value deserves more thought; just returning last value, also see above, looping over ICurveFitData's is broken
         return returnValue;
 
     }
