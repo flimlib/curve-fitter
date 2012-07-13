@@ -69,7 +69,7 @@ public class JaolhoCurveFitter extends AbstractCurveFitter {
     function = new ExpFunction(getNumberComponents());
 
     for (ICurveFitData data: dataArray) {
-      double yData[] = data.getYCount();
+      double yData[] = data.getTransient();
       for (int i = 0; i < length; ++i) {
         lmaData[1][i] = yData[start + i];
       }

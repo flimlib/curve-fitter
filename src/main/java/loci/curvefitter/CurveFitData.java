@@ -111,12 +111,12 @@ public class CurveFitData implements ICurveFitData {
     }
 
     @Override
-    public double[] getYCount() {
+    public double[] getTransient() {
         return _yCount;
     }
     
     @Override
-    public double[] getAdjustedYCount() {
+    public double[] getAdjustedTransient() {
         int size = _transEndIndex - _transStartIndex;
         double[] adjusted = new double[size];
         for (int i = 0; i < size; ++i) {
@@ -157,6 +157,7 @@ public class CurveFitData implements ICurveFitData {
     
     @Override
     public void setTransStartIndex(int transStartIndex) {
+        System.out.println("********** set trans start " + transStartIndex);
         _transStartIndex = transStartIndex;
     }
     

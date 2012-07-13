@@ -120,14 +120,14 @@ public interface ICurveFitData {
      *
      * @return array of data
      */
-    public double[] getYCount();
+    public double[] getTransient();
 
     /**
-     * Get input data for the fit, starting with start index.  Input to fit only.
+     * Get input data for the fit, starting with data start index.  Input to fit only.
      * 
      * @return array of data
      */
-    public double[] getAdjustedYCount();
+    public double[] getAdjustedTransient();
 
     /**
      * Set input data for the fit.  Input to fit only.

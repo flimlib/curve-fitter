@@ -258,14 +258,15 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                 // set start and stop
                 int start = data.getAdjustedDataStartIndex();
                 int stop  = data.getAdjustedTransEndIndex();
+                double[] trans = data.getAdjustedTransient();
                 
                 // these lines give more TRI2 compatible fit results
                 int RLDnoise = noise;
                 if (FitAlgorithm.SLIMCURVE_RLD_LMA.equals(m_fitAlgorithm)) {
                     start = getEstimator().getEstimateStartIndex
-                                (data.getAdjustedYCount(), start, stop);
+                                (trans, start, stop);
                     a[0]  = getEstimator().getEstimateAValue
-                                (a[0], data.getAdjustedYCount(), start, stop);
+                                (a[0], trans, start, stop);
                     NoiseModel noiseModel = NoiseModel.values()[noise];
                     RLDnoise = getEstimator().getEstimateNoiseModel(noiseModel).ordinal();
                 }
@@ -274,7 +275,7 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                     
                 returnValue = doRLDFit(
                         m_xInc,
-                        data.getAdjustedYCount(),
+                        trans,
                         start,
                         stop,
                         m_instrumentResponse,
@@ -317,8 +318,11 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                 // set start and stop
                 int start = data.getAdjustedDataStartIndex();
                 int stop  = data.getAdjustedTransEndIndex();
+                double[] trans = data.getAdjustedTransient();
+                
              //TODO ARG patch cursors; alleviates a bug elsewhere; FIX this
              if (start < 0) {
+                 ij.IJ.log("start was < 0, fixed");
                  start = 0;
              }
                 
@@ -328,7 +332,7 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                    
                 returnValue = doLMAFit(
                         m_xInc,
-                        data.getAdjustedYCount(),
+                        trans,
                         start,
                         stop,
                         m_instrumentResponse,

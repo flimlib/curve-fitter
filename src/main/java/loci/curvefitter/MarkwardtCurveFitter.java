@@ -61,7 +61,7 @@ public class MarkwardtCurveFitter extends AbstractCurveFitter {
     CLibrary lib = (CLibrary) Native.loadLibrary("Markwardt", CLibrary.class);
 
     for (ICurveFitData data: dataArray) {
-      double y[] = data.getYCount();
+      double y[] = data.getTransient();
       int nParams = data.getParams().length;
       double params[] = data.getParams();
       int paramFree[] = new int[nParams];
