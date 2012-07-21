@@ -157,7 +157,6 @@ public class CurveFitData implements ICurveFitData {
     
     @Override
     public void setTransStartIndex(int transStartIndex) {
-        System.out.println("********** set trans start " + transStartIndex);
         _transStartIndex = transStartIndex;
     }
     

@@ -8,12 +8,33 @@ import loci.curvefitter.ICurveFitter.FitFunction;
 import loci.curvefitter.ICurveFitter.NoiseModel;
 
 /**
- * This is an interface used when doing a fit with an RLD estimate fit combined
- * with a LMA fit.  It allows for some peculiarities of TRI2.
+ * This interface allows for some peculiarities of TRI2 to ensure matching results,
+ * particularly when doing a fit with an RLD estimate combined with an LMA fit.
  *
  * @author Aivar Grislis
  */
 public interface IFitterEstimator {
+
+    /**
+     * Gets default A for RLD fits.
+     * 
+     * @return 
+     */
+    public double getDefaultA();
+
+    /**
+     * Gets default T for RLD fits.
+     * 
+     * @return 
+     */
+    public double getDefaultT();
+
+    /**
+     * Gets default Z for RLD fits.
+     * 
+     * @return 
+     */
+    public double getDefaultZ();
 
     /**
      * TRI2 adjusts the start index for the initial RLD estimate.
@@ -57,4 +78,35 @@ public interface IFitterEstimator {
      */
     public void adjustEstimatedParams(double[] params, boolean[] free,
             FitFunction fitFunction, double A, double tau, double Z);
+
+    /**
+     * Converts a bin index to a time value.
+     * 
+     * @param bin
+     * @param inc
+     * @return 
+     */
+    public double binToValue(int bin, double inc);
+
+    /**
+     * Converts a time value to a bin index.
+     * 
+     * @param value
+     * @param inc
+     * @param bins
+     * @return 
+     */
+    public int valueToBin(double value, double inc, int bins);
+
+    /**
+     * Converts a time value to a bin index.
+     * <p>
+     * This variant deals with the ending bin index.
+     * 
+     * @param value
+     * @param inc
+     * @param bins
+     * @return 
+     */
+    public int endValueToBin(double value, double inc, int bins);
 }

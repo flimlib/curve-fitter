@@ -14,6 +14,21 @@ import loci.curvefitter.ICurveFitter.NoiseModel;
  * @author Aivar Grislis
  */
 public class DummyFitterEstimator implements IFitterEstimator {
+    
+    @Override
+    public double getDefaultA() {
+        return 1000.0;
+    }
+    
+    @Override
+    public double getDefaultT() {
+        return 2.0;
+    }
+    
+    @Override
+    public double getDefaultZ() {
+        return 0.0;
+    }
 
     @Override
     public int getEstimateStartIndex(double[] yCount, int start, int stop) {
@@ -99,5 +114,34 @@ public class DummyFitterEstimator implements IFitterEstimator {
                 }
                 break;
         }
+    }
+    
+    @Override
+    public double binToValue(int bin, double inc) {
+        return bin * inc;
+    }
+
+    @Override
+    public int valueToBin(double value, double inc, int bins) {
+        int bin = (int)(value / inc);
+        if (bin < 0) {
+            bin = 0;
+        }
+        else if (bin >= bins) {
+            bin = bins - 1;
+        }
+        return bin;
+    }
+
+    @Override
+    public int endValueToBin(double value, double inc, int bins) {
+        int bin = (int)(value / inc);
+        if (bin < 0) {
+            bin = 0;
+        }
+        else if (bin >= bins) {
+            bin = bins - 1;
+        }
+        return bin;
     }
 }

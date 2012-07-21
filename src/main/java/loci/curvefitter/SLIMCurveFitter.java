@@ -163,10 +163,6 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
      * @param chiSquareTarget
      * @return
      */
-    //TODO I'm omitted noise, see above and restrainType and fitType, for now
-    //TODO also covar, alpha, errAxes and chiSqPercent
-    //TODO I'm omitting residuals[] aren't residuals = y 0 yFitted??? is there some weighting I'm missing that is time-consuming/impossible to recreate?
-
     private native int LMA_fit(double xInc,
                            double y[],
                            int fitStart,
@@ -244,21 +240,15 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
             // RLD or triple integral fit
 
             for (ICurveFitData data: dataArray) {
-                // grab incoming parameters
-                a[0]   = data.getParams()[2];
-                tau[0] = data.getParams()[3];
-                z[0]   = data.getParams()[1];
-                
-                System.out.println("A " + a[0] + " T " + tau[0] + " Z " + z[0]); //TODO ARG in instances when RLD fails the incoming parameters will become the results.
-                a[0] = 100.0;
-                tau[0] = 0.5;
-                z[0] = 0.5;
-                System.out.println("A " + a[0] + " T " + tau[0] + " Z " + z[0]);
-
                 // set start and stop
                 int start = data.getAdjustedDataStartIndex();
                 int stop  = data.getAdjustedTransEndIndex();
                 double[] trans = data.getAdjustedTransient();
+ 
+                // initialize parameters to be fitted
+                a[0]   = getEstimator().getDefaultA();
+                tau[0] = getEstimator().getDefaultT();
+                z[0]   = getEstimator().getDefaultZ();
                 
                 // these lines give more TRI2 compatible fit results
                 int RLDnoise = noise;
@@ -289,7 +279,7 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                         chiSquare,
                         data.getChiSquareTarget() * chiSquareAdjust
                         );
-                
+                              
                 if (FitAlgorithm.SLIMCURVE_RLD.equals(m_fitAlgorithm)) {
                     // set outgoing parameters; note m_free ignored here
                     data.getParams()[0] = chiSquare[0] / chiSquareAdjust;
@@ -319,17 +309,9 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                 int start = data.getAdjustedDataStartIndex();
                 int stop  = data.getAdjustedTransEndIndex();
                 double[] trans = data.getAdjustedTransient();
-                
-             //TODO ARG patch cursors; alleviates a bug elsewhere; FIX this
-             if (start < 0) {
-                 ij.IJ.log("start was < 0, fixed");
-                 start = 0;
-             }
-                
-                //TODO ARG should we get a new A here also?
                     
                 int chiSquareAdjust = stop - start - numParamFree;
-                   
+                                  
                 returnValue = doLMAFit(
                         m_xInc,
                         trans,
