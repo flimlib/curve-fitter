@@ -261,7 +261,7 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                     RLDnoise = getEstimator().getEstimateNoiseModel(noiseModel).ordinal();
                 }
                     
-                int chiSquareAdjust = stop - start - numParamFree;
+                int chiSquareAdjust = stop - start - 3;
                     
                 returnValue = doRLDFit(
                         m_xInc,
@@ -311,7 +311,7 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                 double[] trans = data.getAdjustedTransient();
                     
                 int chiSquareAdjust = stop - start - numParamFree;
-                                  
+                
                 returnValue = doLMAFit(
                         m_xInc,
                         trans,

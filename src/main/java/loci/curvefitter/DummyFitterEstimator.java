@@ -122,26 +122,19 @@ public class DummyFitterEstimator implements IFitterEstimator {
     }
 
     @Override
-    public int valueToBin(double value, double inc, int bins) {
+    public int valueToBin(double value, double inc) {
         int bin = (int)(value / inc);
-        if (bin < 0) {
-            bin = 0;
-        }
-        else if (bin >= bins) {
-            bin = bins - 1;
-        }
         return bin;
     }
-
+    
     @Override
-    public int endValueToBin(double value, double inc, int bins) {
-        int bin = (int)(value / inc);
-        if (bin < 0) {
-            bin = 0;
-        }
-        else if (bin >= bins) {
-            bin = bins - 1;
-        }
-        return bin;
+    public double roundToDecimalPlaces(double value, int decimalPlaces) {
+        double decimalTerm = Math.pow(value, decimalPlaces);
+        int tmp = roundToNearestInteger(value * decimalTerm);
+        return (double) tmp / decimalTerm;
+    }
+    
+    private int roundToNearestInteger(double value) {
+        return (int) (value + 0.5);
     }
 }

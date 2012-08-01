@@ -93,20 +93,16 @@ public interface IFitterEstimator {
      * 
      * @param value
      * @param inc
-     * @param bins
      * @return 
      */
-    public int valueToBin(double value, double inc, int bins);
+    public int valueToBin(double value, double inc);
 
     /**
-     * Converts a time value to a bin index.
-     * <p>
-     * This variant deals with the ending bin index.
+     * Rounds a double floating point to a specified number of decimal places.
      * 
      * @param value
-     * @param inc
-     * @param bins
+     * @param decimalPlaces
      * @return 
      */
-    public int endValueToBin(double value, double inc, int bins);
+    public double roundToDecimalPlaces(double value, int decimalPlaces);
 }
