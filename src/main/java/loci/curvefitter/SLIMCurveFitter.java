@@ -34,11 +34,10 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package loci.curvefitter;
 
-//TODO used for JNA version
+// used for JNA version
 import com.sun.jna.Library;
 import com.sun.jna.Native;
 import com.sun.jna.ptr.DoubleByReference;
-//TODO
 
 import ij.IJ;
 
@@ -60,7 +59,7 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
     private static volatile boolean s_libraryLoaded = false;
     private static boolean s_libraryOnPath = false;
     private static CLibrary s_library;
-
+private static int counter = 0;
     /**
      * This interface supports loading the library using JNA.
      */
@@ -108,7 +107,7 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
 
 
     /**
-     * This supports calling the libray using JNI.
+     * This supports calling the library using JNI.
      *
      * @param xInc
      * @param y
@@ -199,7 +198,7 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                     
                     // look for library on path
                     try {
-                        System.out.println("Using JNA");
+                        //System.out.println("Using JNA");
                         s_library = (CLibrary) Native.loadLibrary("slim-curve-1.0-SNAPSHOT", CLibrary.class);
                         s_libraryLoaded = true;
                         s_libraryOnPath = true;
@@ -212,7 +211,7 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
 
                 if (!s_libraryLoaded) {
                     // look for library in jar, using JNI
-                    System.out.println("Using JNI");
+                    //System.out.println("Using JNI");
                     s_libraryLoaded = NativeLibraryUtil.loadNativeLibrary(this.getClass(), "slim-curve");
                 }
             }
@@ -235,10 +234,11 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                 ++numParamFree;
             }
         }
-        
+		       
         if (FitAlgorithm.SLIMCURVE_RLD.equals(m_fitAlgorithm) || FitAlgorithm.SLIMCURVE_RLD_LMA.equals(m_fitAlgorithm)) {
             // RLD or triple integral fit
 
+			//TODO ARG passing in array of data is broken
             for (ICurveFitData data: dataArray) {
                 // set start and stop
                 int start = data.getAdjustedDataStartIndex();
@@ -279,6 +279,11 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                         chiSquare,
                         data.getChiSquareTarget() * chiSquareAdjust
                         );
+				//System.out.println("RLD returns " + returnValue);
+
+				//TODO actually RLD fitting won't return an error code; in an error situation it should recover with best guess probably
+				//if (returnValue < 0) { System.out.println("RLD fails " + returnValue); ; return returnValue; }//TODO ARG don't do LMA if RLD fails
+				//TODO actually TRI2 recovers from a bad RLD estimate
                               
                 if (FitAlgorithm.SLIMCURVE_RLD.equals(m_fitAlgorithm)) {
                     // set outgoing parameters; note m_free ignored here
@@ -329,12 +334,19 @@ public class SLIMCurveFitter extends AbstractCurveFitter {
                         data.getChiSquareTarget() * chiSquareAdjust,
                         chiSquareDelta
                         );
-                
-                data.getParams()[0] /= chiSquareAdjust;
+				
+				if (returnValue < 0 && returnValue != -2) {  // Error code -2 means "k > MAX_ITERS"
+					// error, so params are meaningless
+					for (int i = 0; i < data.getParams().length; ++i) {
+						data.getParams()[i] = Double.NaN;
+					}
+				}
+				else {
+                    data.getParams()[0] /= chiSquareAdjust;
+				}
             }
         }
 
-        //TODO ARG error value deserves more thought; just returning last value, also see above, looping over ICurveFitData's is broken
         return returnValue;
 
     }
