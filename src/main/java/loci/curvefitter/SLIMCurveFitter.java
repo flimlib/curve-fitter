@@ -335,6 +335,8 @@ private static int counter = 0;
                         chiSquareDelta
                         );
 				
+				//System.out.println("LMA fit returns chisq of " + chiSquare[0] + " or " + data.getParams()[0]);
+				
 				if (returnValue < 0 && returnValue != -2) {  // Error code -2 means "k > MAX_ITERS"
 					// error, so params are meaningless
 					for (int i = 0; i < data.getParams().length; ++i) {
@@ -342,7 +344,16 @@ private static int counter = 0;
 					}
 				}
 				else {
+					// compute reduced chi square
                     data.getParams()[0] /= chiSquareAdjust;
+					
+					// compute AIC
+					//System.out.println("chisq from LMA is " + chiSquare[0]);
+					chiSquare[0] += 2 * numParamFree;
+					data.setChiSquare(chiSquare[0]);
+					//System.out.println(" -> becomes AIC " + chiSquare[0]);
+					//TODO ARG since chisquare is returned in two places I am misusing one to be the AIC.
+					//  if AIC based model selection takes off might be cleaner to add as a parameter?
 				}
             }
         }
