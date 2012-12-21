@@ -34,8 +34,8 @@
       <version>${imagej1.version}</version>
     </dependency>
     <dependency>
-      <groupId>${imagej.groupId}</groupId>
-      <artifactId>native-library-util</artifactId>
+      <groupId>org.scijava</groupId>
+      <artifactId>native-lib-loader</artifactId>
       <version>${imagej.version}</version>
     </dependency>
     <!-- TODO: define a real POM for akutan project
@@ -76,6 +76,7 @@
           <archive>
             <manifest>
               <packageName>loci.curvefitter</packageName>
+			  <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
             </manifest>
           </archive>
         </configuration>

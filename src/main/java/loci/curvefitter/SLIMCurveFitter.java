@@ -41,7 +41,7 @@ import com.sun.jna.ptr.DoubleByReference;
 
 import ij.IJ;
 
-import imagej.nativelibrary.NativeLibraryUtil;
+import org.scijava.nativelib.NativeLibraryUtil;
 
 import loci.curvefitter.ICurveFitter.NoiseModel;
 
@@ -212,7 +212,7 @@ private static int counter = 0;
                 if (!s_libraryLoaded) {
                     // look for library in jar, using JNI
                     //System.out.println("Using JNI");
-                    s_libraryLoaded = NativeLibraryUtil.loadNativeLibrary(this.getClass(), "slim-curve");
+                    s_libraryLoaded = NativeLibraryUtil.loadVersionedNativeLibrary(this.getClass(), "slim-curve");
                 }
             }
         }
