@@ -33,11 +33,6 @@
       <artifactId>ij</artifactId>
       <version>${imagej1.version}</version>
     </dependency>
-    <dependency>
-      <groupId>org.scijava</groupId>
-      <artifactId>native-lib-loader</artifactId>
-      <version>${imagej.version}</version>
-    </dependency>
     <!-- TODO: define a real POM for akutan project
       See: http://sourceforge.net/projects/akutan/ -->
     <dependency>
@@ -59,6 +54,11 @@
       <groupId>net.java.dev.jna</groupId>
       <artifactId>jna</artifactId>
       <version>3.2.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.scijava</groupId>
+      <artifactId>native-lib-loader</artifactId>
+      <version>2.0.0</version>
     </dependency>
     <dependency>
       <groupId>loci</groupId>
