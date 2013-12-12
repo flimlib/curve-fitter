@@ -76,7 +76,7 @@
           <archive>
             <manifest>
               <packageName>loci.curvefitter</packageName>
-			  <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
             </manifest>
           </archive>
         </configuration>
