@@ -8,8 +8,8 @@
 	<parent>
 		<groupId>loci</groupId>
 		<artifactId>pom-loci</artifactId>
-		<version>1.13</version>
-		<relativePath>../..</relativePath>
+		<version>1.15</version>
+		<relativePath />
 	</parent>
 
 	<artifactId>curve-fitter</artifactId>
