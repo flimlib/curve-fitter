@@ -6,9 +6,9 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>loci</groupId>
-		<artifactId>pom-loci</artifactId>
-		<version>1.16</version>
+		<groupId>org.scijava</groupId>
+		<artifactId>pom-scijava</artifactId>
+		<version>1.149</version>
 		<relativePath />
 	</parent>
 
@@ -17,6 +17,7 @@
 
 	<name>Curve Fitter library</name>
 	<description>A library for fitting single- or multi-component exponential decay curves to sample data.</description>
+	<url>https://slim-curve.github.io/</url>
 	<inceptionYear>2010</inceptionYear>
 
 	<licenses>
@@ -26,6 +27,11 @@
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
+
+	<organization>
+		<name>SLIM Curve</name>
+		<url>https://github.com/slim-curve/</url>
+	</organization>
 
 	<dependencies>
 		<dependency>
@@ -150,7 +156,6 @@
 		<developer>
 			<id>grislis</id>
 			<name>Aivar Grislis</name>
-			<email>grislis@wisc.edu</email>
 			<url>http://loci.wisc.edu/people/aivar-grislis</url>
 			<organization>UW-Madison LOCI</organization>
 			<organizationUrl>http://loci.wisc.edu/</organizationUrl>
@@ -160,13 +165,45 @@
 			</roles>
 			<timezone>-6</timezone>
 		</developer>
+		<developer>
+			<id>ctrueden</id>
+			<name>Curtis Rueden</name>
+			<email>ctrueden@wisc.edu</email>
+			<url>http://loci.wisc.edu/people/curtis-rueden</url>
+			<organization>UW-Madison LOCI</organization>
+			<organizationUrl>http://loci.wisc.edu/</organizationUrl>
+			<roles>
+				<role>maintainer</role>
+			</roles>
+			<timezone>-6</timezone>
+		</developer>
 	</developers>
 
+	<issueManagement>
+		<system>GitHub Issues</system>
+		<url>https://github.com/slim-curve/curve-fitter/issues</url>
+	</issueManagement>
+
+	<ciManagement>
+		<system>Jenkins</system>
+		<url>http://jenkins.imagej.net/job/curve-fitter/</url>
+	</ciManagement>
+
+	<mailingLists>
+		<mailingList>
+			<name>SLIM Curve</name>
+			<subscribe>http://loci.wisc.edu/mailman/listinfo/slim-curve</subscribe>
+			<unsubscribe>http://loci.wisc.edu/mailman/listinfo/slim-curve</unsubscribe>
+			<post>slim-curve@loci.wisc.edu</post>
+			<archive>http://loci.wisc.edu/pipermail/slim-curve/</archive>
+		</mailingList>
+	</mailingLists>
+
 	<scm>
-		<connection>scm:git:git://github.com/uw-loci/curve-fitter</connection>
-		<developerConnection>scm:git:git@github.com:uw-loci/curve-fitter</developerConnection>
+		<connection>scm:git:git://github.com/slim-curve/curve-fitter</connection>
+		<developerConnection>scm:git:git@github.com:slim-curve/curve-fitter</developerConnection>
 		<tag>HEAD</tag>
-		<url>https://github.com/uw-loci/curve-fitter</url>
+		<url>https://github.com/slim-curve/curve-fitter</url>
 	</scm>
 
 	<repositories>
