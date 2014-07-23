@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>org.scijava</groupId>
 		<artifactId>pom-scijava</artifactId>
-		<version>1.149</version>
+		<version>2.25</version>
 		<relativePath />
 	</parent>
 
@@ -36,16 +36,21 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>${project.groupId}</groupId>
+			<groupId>slim-curve</groupId>
 			<artifactId>slim-curve</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
 			<type>nar</type>
 		</dependency>
 
 		<dependency>
-			<groupId>${imagej.groupId}</groupId>
+			<groupId>net.imagej</groupId>
 			<artifactId>ij</artifactId>
-			<version>${imagej1.version}</version>
+			<version>1.49d</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.scijava</groupId>
+			<artifactId>native-lib-loader</artifactId>
 		</dependency>
 
 		<!-- TODO: define a real POM for akutan project
@@ -69,11 +74,6 @@
 			<groupId>net.java.dev.jna</groupId>
 			<artifactId>jna</artifactId>
 			<version>3.2.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.scijava</groupId>
-			<artifactId>native-lib-loader</artifactId>
-			<version>2.0.0</version>
 		</dependency>
 	</dependencies>
 
