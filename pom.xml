@@ -106,8 +106,8 @@
 			<build>
 				<plugins>
 					<plugin>
-						<artifactId>maven-nar-plugin</artifactId>
-						<version>${nar.version}</version>
+						<groupId>com.github.maven-nar</groupId>
+						<artifactId>nar-maven-plugin</artifactId>
 						<extensions>true</extensions>	<!-- what does this do? -->
 						<configuration>
 							<ignore>true</ignore>
