@@ -99,61 +99,6 @@
 		</plugins>
 	</build>
 
-	<profiles>
-		<profile>
-			<id>with-libs</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>com.github.maven-nar</groupId>
-						<artifactId>nar-maven-plugin</artifactId>
-						<extensions>true</extensions>	<!-- what does this do? -->
-						<configuration>
-							<ignore>true</ignore>
-							<classifiers>
-								<!-- if one classifier fails, rest are ignored -->		
-								<classifier>x86_64-MacOSX-gpp-shared</classifier>
-								<classifier>x86-Windows-msvc-shared</classifier>	
-								<classifier>amd64-Linux-gpp-shared</classifier>
-							</classifiers>
-							<libraries>
-								<library>
-									<type>shared</type>
-								</library>
-							</libraries>
-						</configuration>
-						<executions>
-							<execution>
-								<goals>
-									<goal>nar-download</goal>
-									<goal>nar-unpack</goal>
-									<goal>nar-assembly</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<artifactId>maven-assembly-plugin</artifactId>
-						<configuration>
-							<descriptors>
-								<descriptor>src/main/assembly/with-libs.xml</descriptor>
-							</descriptors>
-						</configuration>
-						<executions>
-							<execution>
-								<id>make-assembly</id>
-								<phase>package</phase>
-								<goals>
-									<goal>single</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
-
 	<developers>
 		<developer>
 			<id>grislis</id>
