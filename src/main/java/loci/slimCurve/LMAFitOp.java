@@ -37,7 +37,7 @@ public class LMAFitOp extends AbstractOp {
 	@Parameter
 	private int paramFree[];
 	@Parameter
-	private int nParam = 3;
+	private int nParam;
 	@Parameter
 	private double fitted[];
 	@Parameter
@@ -45,11 +45,11 @@ public class LMAFitOp extends AbstractOp {
 	@Parameter
 	private double chiSquareTarget;
 	@Parameter
-	private double chiSquareDelta = .01;
+	private double chiSquareDelta;
 
 	@Override
 	public void run () {
-		//Calls into the slimCurve library using JNI
+		//Calls into slimCurve which calls into library with JNI
 		out = slimCurve.fitLMA(
 				xInc, 
 				y, 
@@ -66,7 +66,6 @@ public class LMAFitOp extends AbstractOp {
 				chiSquare, 
 				chiSquareTarget, 
 				chiSquareDelta);
-	}
+	}	
 }
-
 
