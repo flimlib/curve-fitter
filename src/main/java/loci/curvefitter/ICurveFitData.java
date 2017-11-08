@@ -219,7 +219,7 @@ public interface ICurveFitData {
     /**
      * Sets chi square target
      * 
-     * @param chiSquare targeted chi square
+     * @param chiSquareTarget targeted chi square
      */
     public void setChiSquareTarget(double chiSquareTarget);
 

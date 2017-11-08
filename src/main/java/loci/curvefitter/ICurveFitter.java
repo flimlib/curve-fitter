@@ -75,7 +75,7 @@ public interface ICurveFitter {
     /**
      * Set fitting estimator.
      * 
-     * @param fitting estimator
+     * @param estimator fitting estimator
      */
     public void setEstimator(IFitterEstimator estimator);
     
@@ -89,7 +89,7 @@ public interface ICurveFitter {
     /**
      * Set fitting algorithm.
      * 
-     * @param fitting algorithm
+     * @param algorithm fitting algorithm
      */
     public void setFitAlgorithm(FitAlgorithm algorithm);
 
@@ -157,7 +157,7 @@ public interface ICurveFitter {
     /**
      * Get instrument response data.  Input to fit only.
      *
-     * @param scale to this number of pixels
+     * @param pixels scale to this number of pixels
      * @return array of data or null if not set
      */
     public double[] getInstrumentResponse(int pixels);
