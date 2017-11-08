@@ -68,8 +68,8 @@
 		<url>https://github.com/slim-curve/curve-fitter/issues</url>
 	</issueManagement>
 	<ciManagement>
-		<system>Jenkins</system>
-		<url>http://jenkins.imagej.net/job/curve-fitter/</url>
+		<system>Travis CI</system>
+		<url>https://travis-ci.org/slim-curve/curve-fitter</url>
 	</ciManagement>
 
 	<properties>
