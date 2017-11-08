@@ -137,6 +137,20 @@ Wisconsin-Madison.</license.copyrightOwners>
 		</dependency>
 	</dependencies>
 
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.github.maven-nar</groupId>
+				<artifactId>nar-maven-plugin</artifactId>
+				<configuration>
+					<linker>
+						<name>gcc</name>
+					</linker>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
 	<profiles>
 		<profile>
 			<activation>
@@ -153,9 +167,9 @@ Wisconsin-Madison.</license.copyrightOwners>
 							<ignore>true</ignore>
 							<classifiers>
 								<!-- if one classifier fails, rest are ignored -->		
-								<classifier>x86_64-MacOSX-gpp-shared</classifier>
+								<classifier>x86_64-MacOSX-gcc-shared</classifier>
 								<classifier>x86-Windows-msvc-shared</classifier>	
-								<classifier>amd64-Linux-gpp-shared</classifier>
+								<classifier>amd64-Linux-gcc-shared</classifier>
 							</classifiers>
 							<libraries>
 								<library>
