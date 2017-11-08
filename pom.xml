@@ -139,6 +139,9 @@ Wisconsin-Madison.</license.copyrightOwners>
 
 	<profiles>
 		<profile>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
 			<id>with-libs</id>
 			<build>
 				<plugins>
