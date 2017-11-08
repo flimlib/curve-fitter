@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-		http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -20,7 +17,10 @@
 	<description>A library for fitting single- or multi-component exponential decay curves to sample data.</description>
 	<url>https://slim-curve.github.io/</url>
 	<inceptionYear>2010</inceptionYear>
-
+	<organization>
+		<name>SLIM Curve</name>
+		<url>https://github.com/slim-curve/</url>
+	</organization>
 	<licenses>
 		<license>
 			<name>GNU General Public License v3+</name>
@@ -29,10 +29,65 @@
 		</license>
 	</licenses>
 
-	<organization>
-		<name>SLIM Curve</name>
-		<url>https://github.com/slim-curve/</url>
-	</organization>
+	<developers>
+		<developer>
+			<id>grislis</id>
+			<name>Aivar Grislis</name>
+			<url>http://loci.wisc.edu/people/aivar-grislis</url>
+			<organization>UW-Madison LOCI</organization>
+			<organizationUrl>http://loci.wisc.edu/</organizationUrl>
+			<roles>
+				<role>architect</role>
+				<role>developer</role>
+			</roles>
+			<timezone>-6</timezone>
+		</developer>
+		<developer>
+			<id>ctrueden</id>
+			<name>Curtis Rueden</name>
+			<email>ctrueden@wisc.edu</email>
+			<url>http://loci.wisc.edu/people/curtis-rueden</url>
+			<organization>UW-Madison LOCI</organization>
+			<organizationUrl>http://loci.wisc.edu/</organizationUrl>
+			<roles>
+				<role>maintainer</role>
+			</roles>
+			<timezone>-6</timezone>
+		</developer>
+	</developers>
+
+	<mailingLists>
+		<mailingList>
+			<name>SLIM Curve</name>
+			<subscribe>http://imagej.net/mailman/listinfo/slim-curve</subscribe>
+			<unsubscribe>http://imagej.net/mailman/listinfo/slim-curve</unsubscribe>
+			<post>slim-curve@imagej.net</post>
+			<archive>http://imagej.net/pipermail/slim-curve/</archive>
+		</mailingList>
+	</mailingLists>
+
+	<scm>
+		<connection>scm:git:git://github.com/slim-curve/curve-fitter</connection>
+		<developerConnection>scm:git:git@github.com:slim-curve/curve-fitter</developerConnection>
+		<tag>HEAD</tag>
+		<url>https://github.com/slim-curve/curve-fitter</url>
+	</scm>
+	<issueManagement>
+		<system>GitHub Issues</system>
+		<url>https://github.com/slim-curve/curve-fitter/issues</url>
+	</issueManagement>
+	<ciManagement>
+		<system>Jenkins</system>
+		<url>http://jenkins.imagej.net/job/curve-fitter/</url>
+	</ciManagement>
+
+	<repositories>
+		<!-- NB: for project parent -->
+		<repository>
+			<id>imagej.public</id>
+			<url>http://maven.imagej.net/content/groups/public</url>
+		</repository>
+	</repositories>
 
 	<dependencies>
 		<dependency>
@@ -153,67 +208,4 @@
 			</build>
 		</profile>
 	</profiles>
-
-	<developers>
-		<developer>
-			<id>grislis</id>
-			<name>Aivar Grislis</name>
-			<url>http://loci.wisc.edu/people/aivar-grislis</url>
-			<organization>UW-Madison LOCI</organization>
-			<organizationUrl>http://loci.wisc.edu/</organizationUrl>
-			<roles>
-				<role>architect</role>
-				<role>developer</role>
-			</roles>
-			<timezone>-6</timezone>
-		</developer>
-		<developer>
-			<id>ctrueden</id>
-			<name>Curtis Rueden</name>
-			<email>ctrueden@wisc.edu</email>
-			<url>http://loci.wisc.edu/people/curtis-rueden</url>
-			<organization>UW-Madison LOCI</organization>
-			<organizationUrl>http://loci.wisc.edu/</organizationUrl>
-			<roles>
-				<role>maintainer</role>
-			</roles>
-			<timezone>-6</timezone>
-		</developer>
-	</developers>
-
-	<issueManagement>
-		<system>GitHub Issues</system>
-		<url>https://github.com/slim-curve/curve-fitter/issues</url>
-	</issueManagement>
-
-	<ciManagement>
-		<system>Jenkins</system>
-		<url>http://jenkins.imagej.net/job/curve-fitter/</url>
-	</ciManagement>
-
-	<mailingLists>
-		<mailingList>
-			<name>SLIM Curve</name>
-			<subscribe>http://imagej.net/mailman/listinfo/slim-curve</subscribe>
-			<unsubscribe>http://imagej.net/mailman/listinfo/slim-curve</unsubscribe>
-			<post>slim-curve@imagej.net</post>
-			<archive>http://imagej.net/pipermail/slim-curve/</archive>
-		</mailingList>
-	</mailingLists>
-
-	<scm>
-		<connection>scm:git:git://github.com/slim-curve/curve-fitter</connection>
-		<developerConnection>scm:git:git@github.com:slim-curve/curve-fitter</developerConnection>
-		<tag>HEAD</tag>
-		<url>https://github.com/slim-curve/curve-fitter</url>
-	</scm>
-
-	<repositories>
-		<!-- NB: for project parent -->
-		<repository>
-			<id>imagej.public</id>
-			<url>http://maven.imagej.net/content/groups/public</url>
-		</repository>
-	</repositories>
-
 </project>
