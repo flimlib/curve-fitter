@@ -142,70 +142,53 @@ Wisconsin-Madison.</license.copyrightOwners>
 			<plugin>
 				<groupId>com.github.maven-nar</groupId>
 				<artifactId>nar-maven-plugin</artifactId>
+				<extensions>true</extensions>	<!-- what does this do? -->
 				<configuration>
 					<linker>
 						<name>gcc</name>
 					</linker>
+					<ignore>true</ignore>
+					<classifiers>
+						<classifier>x86_64-MacOSX-gcc-shared</classifier>
+						<classifier>i386-MacOSX-gcc-shared</classifier>
+						<classifier>amd64-Windows-gcc-shared</classifier>
+						<classifier>x86-Windows-gcc-shared</classifier>
+						<classifier>amd64-Linux-gcc-shared</classifier>
+						<classifier>i386-Linux-gcc-shared</classifier>
+					</classifiers>
+					<libraries>
+						<library>
+							<type>shared</type>
+						</library>
+					</libraries>
 				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>nar-download</goal>
+							<goal>nar-unpack</goal>
+							<goal>nar-assembly</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptors>
+						<descriptor>src/main/assembly/with-libs.xml</descriptor>
+					</descriptors>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
-
-	<profiles>
-		<profile>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<id>with-libs</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>com.github.maven-nar</groupId>
-						<artifactId>nar-maven-plugin</artifactId>
-						<extensions>true</extensions>	<!-- what does this do? -->
-						<configuration>
-							<ignore>true</ignore>
-							<classifiers>
-								<!-- if one classifier fails, rest are ignored -->		
-								<classifier>x86_64-MacOSX-gcc-shared</classifier>
-								<classifier>x86-Windows-msvc-shared</classifier>	
-								<classifier>amd64-Linux-gcc-shared</classifier>
-							</classifiers>
-							<libraries>
-								<library>
-									<type>shared</type>
-								</library>
-							</libraries>
-						</configuration>
-						<executions>
-							<execution>
-								<goals>
-									<goal>nar-download</goal>
-									<goal>nar-unpack</goal>
-									<goal>nar-assembly</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<artifactId>maven-assembly-plugin</artifactId>
-						<configuration>
-							<descriptors>
-								<descriptor>src/main/assembly/with-libs.xml</descriptor>
-							</descriptors>
-						</configuration>
-						<executions>
-							<execution>
-								<id>make-assembly</id>
-								<phase>package</phase>
-								<goals>
-									<goal>single</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
 </project>
