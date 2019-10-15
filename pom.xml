@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.scijava</groupId>
 		<artifactId>pom-scijava</artifactId>
-		<version>26.0.0</version>
+		<version>27.0.1</version>
 		<relativePath />
 	</parent>
 
@@ -131,60 +131,13 @@ Wisconsin-Madison.</license.copyrightOwners>
 			<groupId>net.java.dev.jna</groupId>
 			<artifactId>jna</artifactId>
 		</dependency>
-	</dependencies>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>com.github.maven-nar</groupId>
-				<artifactId>nar-maven-plugin</artifactId>
-				<extensions>true</extensions>	<!-- what does this do? -->
-				<configuration>
-					<linker>
-						<name>gcc</name>
-					</linker>
-					<ignore>true</ignore>
-					<classifiers>
-						<classifier>x86_64-MacOSX-gcc-shared</classifier>
-						<classifier>i386-MacOSX-gcc-shared</classifier>
-						<classifier>amd64-Windows-gcc-shared</classifier>
-						<classifier>x86-Windows-gcc-shared</classifier>
-						<classifier>amd64-Linux-gcc-shared</classifier>
-						<classifier>i386-Linux-gcc-shared</classifier>
-					</classifiers>
-					<libraries>
-						<library>
-							<type>shared</type>
-						</library>
-					</libraries>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>nar-download</goal>
-							<goal>nar-unpack</goal>
-							<goal>nar-assembly</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<descriptors>
-						<descriptor>src/main/assembly/with-libs.xml</descriptor>
-					</descriptors>
-				</configuration>
-				<executions>
-					<execution>
-						<id>make-assembly</id>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+		<dependency>
+			<groupId>slim-curve</groupId>
+			<artifactId>slim-curve</artifactId>
+			<version>${slim-curve.version}</version>
+			<classifier>${scijava.natives.classifier}</classifier>
+			<scope>runtime</scope>
+		</dependency>
+	</dependencies>
 </project>
