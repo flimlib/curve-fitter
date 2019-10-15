@@ -1,2 +1,2 @@
-[![](https://travis-ci.org/slim-curve/curve-fitter.svg?branch=master)](https://travis-ci.org/slim-curve/curve-fitter)
-
+This library has been discontinued in favor of
+[flimj-ops](https://github.com/slim-curve/flimj-ops).
